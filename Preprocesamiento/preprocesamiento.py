@@ -25,7 +25,7 @@ from six import StringIO
 from IPython.display import Image
 import pydotplus
 
-IMPRIME_INFO = False
+IMPRIME_INFO = True
 
 def read_data(mini=True):
     if(mini):
@@ -36,6 +36,84 @@ def read_data(mini=True):
     df_I = df.copy()
     df = df.drop(columns = ['WKDY_I', 'HOUR_I', 'MANCOL_I', 'RELJCT_I', 'ALIGN_I', 'PROFIL_I', 'SURCON_I', 'TRFCON_I', 'SPDLIM_H', 'LGTCON_I', 'WEATHR_I', 'ALCHL_I'])
     df_I = df_I.drop(columns = ['WEEKDAY', 'HOUR', 'MAN_COL', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'ALCOHOL'])
+    return df, df_I
+
+def discretize_HOUR(df, imputed=False):
+    if imputed:
+        atribute = 'HOUR_I'
+    else:
+        atribute = 'HOUR'
+    for i in range(len(df[atribute])):
+        # Si es por la mañana asigno un 0
+        if(df[atribute][i]>=7 and df[atribute][i]<=14):
+            df[atribute][i] = 0
+        # Si es por la tarde asigno un 1
+        elif(df[atribute][i]>=15 and df[atribute][i]<=23):
+            df[atribute][i] = 1
+        # Si es por la noche o es desconocido asigno un 2
+        else:
+            df[atribute][i] = 2
+    return df
+
+def discretize_WEEKDAY(df, imputed=False):
+    if imputed:
+        atribute = 'WKDY_I'
+    else:
+        atribute = 'WEEKDAY'
+    for i in range(len(df[atribute])):
+        # Si es entre semana asigno 0
+        if(df[atribute][i]>=2 and df[atribute][i]<=6):
+            df[atribute][i] = 0
+        # Si es entre semana asigno 1
+        else:
+            df[atribute][i] = 1
+    return df
+
+def discretize_SPD_LIM(df, imputed=False):
+    if imputed:
+        atribute = 'SPDLIM_H'
+    else:
+        atribute = 'SPD_LIM'
+    for i in range(len(df[atribute])):
+        # Si es menor a 40 asigno 0
+        if(df[atribute][i]<40):
+            df[atribute][i] = 0
+        # Si entre 40 y 65 asigno 1
+        elif(df[atribute][i]>=40 and df[atribute][i]<66):
+            df[atribute][i] = 1
+        # Si es mayor a 65 asigno 2
+        else:
+            df[atribute][i] = 2
+    return df
+
+# A mi entender solo merece la pena discretizar las variables HOUR, WEEKDAY y SPD_LIM
+def discretize(df, df_I):
+    print("\nDiscretizando algunas variables")
+
+    # Discretizando el atributo HOUR y HOUR_I
+    df = discretize_HOUR(df)
+    df_I = discretize_HOUR(df_I, True)
+    if(IMPRIME_INFO):
+        print("\n--> Variable hora")
+        print(df.groupby(['HOUR']).size())
+        print(df_I.groupby(['HOUR_I']).size())
+
+    # Discretizando el atributo WEEKDAY y WKDY_I
+    df = discretize_WEEKDAY(df)
+    df_I = discretize_WEEKDAY(df_I, True)
+    if(IMPRIME_INFO):
+        print("\n--> Variable día de la semana")
+        print(df.groupby(['WEEKDAY']).size())
+        print(df_I.groupby(['WKDY_I']).size())
+
+    # Discretizando el atributo SPD_LIM y SPDLIM_H
+    df = discretize_SPD_LIM(df)
+    df_I = discretize_SPD_LIM(df_I, True)
+    if(IMPRIME_INFO):
+        print("\n--> Variable velocidad límite")
+        print(df.groupby(['SPD_LIM']).size())
+        print(df_I.groupby(['SPDLIM_H']).size())
+
     return df, df_I
 
 def construct_class_variable(df):
@@ -79,6 +157,8 @@ if(IMPRIME_INFO):
     #for x in df_I.columns:
     #    print(df_I.groupby([x]).size())
 
+df, df_I = discretize(df, df_I)
+
 print("\n--> Variables sobre las que se va construir la etiqueta a predecir:")
 print(df.groupby(['PRPTYDMG_CRASH', 'INJURY_CRASH', 'FATALITIES']).size())
 
@@ -111,6 +191,7 @@ X_I_train, X_I_test, y_I_train, y_I_test = train_test_data(df_I, feature_cols_I,
 summarize_info(X_train, X_test, y_train, y_test)
 summarize_info(X_I_train, X_I_test, y_I_train, y_I_test, "imputados ")
 
+"""
 # El clasificador es un árbol de decisión
 print("Construyendo el árbol de decisión")
 clf = DecisionTreeClassifier()
@@ -130,5 +211,5 @@ y_I_pred = clf.predict(X_I_test)
 # Accuracy del modelo
 print("Accuracy: {}".format(accuracy_score(y_test, y_pred)))
 print("Accuracy del conjunto imputado: {}".format(accuracy_score(y_I_test, y_I_pred)))
-
+"""
 #draw_png(clf, feature_cols)
