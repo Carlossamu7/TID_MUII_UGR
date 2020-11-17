@@ -145,71 +145,108 @@ def draw_png(clf, feature_cols, title="arbol.png"):
     graph.write_png(title)
     Image(graph.create_png())
 
+def run_model(X_train, X_test, y_train, y_test):
+    # El clasificador es un árbol de decisión
+    print("Construyendo el árbol de decisión")
+    clf = DecisionTreeClassifier()
+    #clf = DecisionTreeClassifier(criterion="entropy", max_depth=3)
+    # Entrenando el árbol
+    print("Entrenando el árbol de decisión")
+    clf = clf.fit(X_train, y_train)
+    # Prediciendo la etiqueta
+    print("Prediciendo etiquetas")
+    y_pred = clf.predict(X_test)
+    # Accuracy del modelo
+    print("Accuracy: {}".format(accuracy_score(y_test, y_pred)))
+    # Pintando el árbol
+    #draw_png(clf, feature_cols)
 
-print("Leyendo el conjunto de datos")
-df, df_I = read_data()
+def imput_mean(df):
+    atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
+    unknown_val = [9, 99, 99, 9, 99, 9, 9, 9, 99, 99, 9, 9, 9998, 9999, 9]
+    for i in range(len(atr_imputed)):
+        mean = int(df[atr_imputed[i]].mean())
+        if(IMPRIME_INFO):
+            print("Cambiando en {} el valor {} por su media: {}".format(atr_imputed[i], unknown_val[i], mean))
+        df[atr_imputed[i]] = df[atr_imputed[i]].replace(to_replace = unknown_val[i], value = mean)
+    return df
 
-if(IMPRIME_INFO):
-    print(df.info())
-    print(df_I.info())
-    #for x in df.columns:
-    #    print(df.groupby([x]).size())
-    #for x in df_I.columns:
-    #    print(df_I.groupby([x]).size())
+def imput_mode(df):
+    atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
+    unknown_val = [9, 99, 99, 9, 99, 9, 9, 9, 99, 99, 9, 9, 9998, 9999, 9]
+    for i in range(len(atr_imputed)):
+        mode = int(df[atr_imputed[i]].mode())
+        if(IMPRIME_INFO):
+            print("Cambiando en {} el valor {} por su moda: {}".format(atr_imputed[i], unknown_val[i], mode))
+        df[atr_imputed[i]] = df[atr_imputed[i]].replace(unknown_val[i], mode)
+    return df
 
-df, df_I = discretize(df, df_I)
+########################
+#####     MAIN     #####
+########################
 
-print("\n--> Variables sobre las que se va construir la etiqueta a predecir:")
-print(df.groupby(['PRPTYDMG_CRASH', 'INJURY_CRASH', 'FATALITIES']).size())
+""" Programa principal. """
+def main():
+    print("Leyendo el conjunto de datos")
+    df, df_I = read_data()
 
-print("\nTamaño antes de construir la variable predecir: {}".format(df.shape))
-df = construct_class_variable(df)
-df_I = construct_class_variable(df_I)
-print("Tamaño después de construir la variable predecir: {}".format(df.shape))
+    if(IMPRIME_INFO):
+        print(df.info())
+        print(df_I.info())
+        #for x in df.columns:
+        #    print(df.groupby([x]).size())
+        #for x in df_I.columns:
+        #    print(df_I.groupby([x]).size())
 
-if(IMPRIME_INFO):
-    print("\n--> Columnas por el momento:")
-    print(df.columns)
-    print(df_I.columns)
+    #df, df_I = discretize(df, df_I)
 
-print("\n--> Etiqueta a predecir:")
-print(df.groupby(['CRASH_TYPE']).size())
-#print(df_I.groupby(['CRASH_TYPE']).size())
+    print("\n--> Variables sobre las que se va construir la etiqueta a predecir:")
+    print(df.groupby(['PRPTYDMG_CRASH', 'INJURY_CRASH', 'FATALITIES']).size())
 
-# Conjuntos de entrenamiento y test
-feature_cols = ['MONTH', 'WEEKDAY', 'HOUR', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'MAN_COL', 'INT_HWY', 'REL_JCT',
-                'REL_RWY', 'TRAF_WAY', 'NUM_LAN', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON',
-                'WEATHER', 'SCHL_BUS', 'PED_ACC', 'ALCOHOL', 'REGION', 'WRK_ZONE']
-feature_cols_I = ['MONTH', 'WKDY_I', 'HOUR_I', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'MANCOL_I', 'INT_HWY', 'RELJCT_I',
-                  'REL_RWY', 'TRAF_WAY', 'NUM_LAN', 'ALIGN_I', 'PROFIL_I', 'SURCON_I', 'TRFCON_I', 'SPDLIM_H', 'LGTCON_I',
-                  'WEATHR_I', 'SCHL_BUS', 'PED_ACC', 'ALCHL_I', 'REGION', 'WRK_ZONE']
-label = 'CRASH_TYPE'
-print("\nDividiendo el conjunto de datos en entrenamiento y test (80%-20%)")
-X_train, X_test, y_train, y_test = train_test_data(df, feature_cols, label)
-X_I_train, X_I_test, y_I_train, y_I_test = train_test_data(df_I, feature_cols_I, label)
+    print("\nTamaño antes de construir la variable predecir: {}".format(df.shape))
+    df = construct_class_variable(df)
+    df_I = construct_class_variable(df_I)
+    print("Tamaño después de construir la variable predecir: {}".format(df.shape))
 
-summarize_info(X_train, X_test, y_train, y_test)
-summarize_info(X_I_train, X_I_test, y_I_train, y_I_test, "imputados ")
+    if(IMPRIME_INFO):
+        print("\n--> Columnas por el momento:")
+        print(df.columns)
+        print(df_I.columns)
 
-"""
-# El clasificador es un árbol de decisión
-print("Construyendo el árbol de decisión")
-clf = DecisionTreeClassifier()
-clf_I = DecisionTreeClassifier()
-#clf = DecisionTreeClassifier(criterion="entropy", max_depth=3)
+    print("\n--> Etiqueta a predecir:")
+    print(df.groupby(['CRASH_TYPE']).size())
+    #print(df_I.groupby(['CRASH_TYPE']).size())
 
-# Entrenando el árbol
-print("Entrenando el árbol de decisión")
-clf = clf.fit(X_train, y_train)
-clf_I = clf_I.fit(X_I_train, y_I_train)
+    for x in df.columns:
+        print(df.groupby([x]).size())
+    print("\n\n\n Escribo \n\n\n")
+    df = imput_mean(df)
+    print("\n\n\n Borro \n\n\n")
+    for x in df.columns:
+        print(df.groupby([x]).size())
+    #df = imput_mode(df)
 
-# Prediciendo la etiqueta
-print("Prediciendo etiquetas")
-y_pred = clf.predict(X_test)
-y_I_pred = clf.predict(X_I_test)
+    # Conjuntos de entrenamiento y test
+    feature_cols = ['MONTH', 'WEEKDAY', 'HOUR', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'MAN_COL', 'INT_HWY', 'REL_JCT',
+                    'REL_RWY', 'TRAF_WAY', 'NUM_LAN', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON',
+                    'WEATHER', 'SCHL_BUS', 'PED_ACC', 'ALCOHOL', 'REGION', 'WRK_ZONE']
+    feature_cols_I = ['MONTH', 'WKDY_I', 'HOUR_I', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'MANCOL_I', 'INT_HWY', 'RELJCT_I',
+                      'REL_RWY', 'TRAF_WAY', 'NUM_LAN', 'ALIGN_I', 'PROFIL_I', 'SURCON_I', 'TRFCON_I', 'SPDLIM_H', 'LGTCON_I',
+                      'WEATHR_I', 'SCHL_BUS', 'PED_ACC', 'ALCHL_I', 'REGION', 'WRK_ZONE']
+    label = 'CRASH_TYPE'
+    print("\nDividiendo el conjunto de datos en entrenamiento y test (80%-20%)")
+    X_train, X_test, y_train, y_test = train_test_data(df, feature_cols, label)
+    X_I_train, X_I_test, y_I_train, y_I_test = train_test_data(df_I, feature_cols_I, label)
 
-# Accuracy del modelo
-print("Accuracy: {}".format(accuracy_score(y_test, y_pred)))
-print("Accuracy del conjunto imputado: {}".format(accuracy_score(y_I_test, y_I_pred)))
-"""
-#draw_png(clf, feature_cols)
+    summarize_info(X_train, X_test, y_train, y_test)
+    summarize_info(X_I_train, X_I_test, y_I_train, y_I_test, "imputados ")
+
+    # EJECUTANDO EL ALGORITMO SOBRE LOS DATOS IMPUTADOS Y SIN IMPUTAR
+    print("\n------ Ejecutando el modelo sobre los datos sin imputar ------")
+    run_model(X_train, X_test, y_train, y_test)
+    print("\n------ Ejecutando el modelo sobre los datos imputados ------")
+    run_model(X_I_train, X_I_test, y_I_train, y_I_test)
+
+
+if __name__ == "__main__":
+	main()
