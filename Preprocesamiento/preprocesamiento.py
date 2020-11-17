@@ -26,7 +26,7 @@ from IPython.display import Image
 import pydotplus
 
 IMPRIME_INFO = False
-IMPUT = 0   # 0:mean, 1:mode, 2:delete_instances, 3:delete_attributes, 4:predict
+IMPUT = 2   # 0:mean, 1:mode, 2:delete_instances, 3:delete_attributes, 4:predict
 
 def read_data(mini=True):
     if(mini):
@@ -35,8 +35,10 @@ def read_data(mini=True):
         df = pd.read_excel(r'accidentes.xls', sheet_name='datos')
 
     df_I = df.copy()
-    df = df.drop(columns = ['WKDY_I', 'HOUR_I', 'MANCOL_I', 'RELJCT_I', 'ALIGN_I', 'PROFIL_I', 'SURCON_I', 'TRFCON_I', 'SPDLIM_H', 'LGTCON_I', 'WEATHR_I', 'ALCHL_I'])
-    df_I = df_I.drop(columns = ['WEEKDAY', 'HOUR', 'MAN_COL', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'ALCOHOL'])
+    df = df.drop(columns = ['WKDY_I', 'HOUR_I', 'MANCOL_I', 'RELJCT_I', 'ALIGN_I', 'PROFIL_I', 'SURCON_I',
+                            'TRFCON_I', 'SPDLIM_H', 'LGTCON_I', 'WEATHR_I', 'ALCHL_I'])
+    df_I = df_I.drop(columns = ['WEEKDAY', 'HOUR', 'MAN_COL', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND',
+                                'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'ALCOHOL'])
     return df, df_I
 
 def discretize_HOUR(df, imputed=False):
@@ -108,7 +110,7 @@ def discretize(df, df_I):
         print(df_I.groupby(['WKDY_I']).size())
 
     # Discretizando el atributo SPD_LIM y SPDLIM_H
-    df = discretize_SPD_LIM(df)
+    df = discretize_SPD_LIM(df)    # Se elimina esta variable que es desconocida
     df_I = discretize_SPD_LIM(df_I, True)
     if(IMPRIME_INFO):
         print("\n--> Variable velocidad límite")
@@ -163,43 +165,62 @@ def run_model(X_train, X_test, y_train, y_test):
     #draw_png(clf, feature_cols)
 
 def imput_mean(df):
-    atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
+    atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND',
+                   'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
     unknown_val = [9, 99, 99, 9, 99, 9, 9, 9, 99, 99, 9, 9, 9998, 9999, 9]
     for i in range(len(atr_imputed)):
         mean = int(df[atr_imputed[i]].mean())
         if(IMPRIME_INFO):
-            print("Cambiando en {} el valor {} por su media: {}".format(atr_imputed[i], unknown_val[i], mean))
+            print("  Cambiando en {} el valor {} por su media: {}".format(atr_imputed[i], unknown_val[i], mean))
         df[atr_imputed[i]] = df[atr_imputed[i]].replace(to_replace = unknown_val[i], value = mean)
     return df
 
 def imput_mode(df):
-    atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
+    atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND',
+                   'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
     unknown_val = [9, 99, 99, 9, 99, 9, 9, 9, 99, 99, 9, 9, 9998, 9999, 9]
     for i in range(len(atr_imputed)):
         mode = int(df[atr_imputed[i]].mode())
         if(IMPRIME_INFO):
-            print("Cambiando en {} el valor {} por su moda: {}".format(atr_imputed[i], unknown_val[i], mode))
+            print("  Cambiando en {} el valor {} por su moda: {}".format(atr_imputed[i], unknown_val[i], mode))
         df[atr_imputed[i]] = df[atr_imputed[i]].replace(unknown_val[i], mode)
     return df
 
 def delete_instances(df):
-    atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
-    unknown_val = [9, 99, 99, 9, 99, 9, 9, 9, 99, 99, 9, 9, 9998, 9999, 9]
-    for i in range(len(atr_imputed)):
+    # No considero SPEED_LIM que siempre es desconocido.
+    atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON',
+                   'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
+    unknown_val = [9, 99, 99, 9, 99, 9, 9, 9, 99, 9, 9, 9998, 9999, 9]
+    to_delete = []
+    for i in range(len(df)):
         cond = False
-
-        mode = int(df[atr_imputed[i]].mode())
-        if(IMPRIME_INFO):
-            print("Cambiando en {} el valor {} por su moda: {}".format(atr_imputed[i], unknown_val[i], mode))
-        df[atr_imputed[i]] = df[atr_imputed[i]].replace(unknown_val[i], mode)
+        for j in range(len(atr_imputed)):
+            if(df.iloc(0)[i][atr_imputed[j]]==unknown_val[j]):
+                cond = True
+                to_delete.append(i)
+    df = df.drop(to_delete, axis=0)
+    df=df.reset_index()
+    del df['index']
+    if(IMPRIME_INFO):
+        print("Número de instancias a eliminar: {}".format(len(to_delete)))
     return df
 
 def imput(df):
-    if(IMPUT==0): df = imput_mean(df)
-    elif(IMPUT==1):  df = imput_mode(df)
-    elif(IMPUT==2):  df = delete_instances(df)
-    elif(IMPUT==3):  df = delete_attributes(df)
-    else: df = predict_values(df)
+    if(IMPUT==0):
+        df = imput_mean(df)
+        print("\nImputando algunos valores con la media")
+    elif(IMPUT==1):
+        df = imput_mode(df)
+        print("\nImputando algunos valores con la moda")
+    elif(IMPUT==2):
+        df = delete_instances(df)
+        print("\nBorrando instancias con valores desconocidos")
+    elif(IMPUT==3):
+        df = delete_attributes(df)
+        print("\nBorrando atributos con valores desconocidos")
+    else:
+        df = predict_values(df)
+        print("\nPrediciento atributos")
     return df
 
 ########################
