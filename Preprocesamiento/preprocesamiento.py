@@ -25,7 +25,8 @@ from six import StringIO
 from IPython.display import Image
 import pydotplus
 
-IMPRIME_INFO = True
+IMPRIME_INFO = False
+IMPUT = 0   # 0:mean, 1:mode, 2:delete_instances, 3:delete_attributes, 4:predict
 
 def read_data(mini=True):
     if(mini):
@@ -181,6 +182,26 @@ def imput_mode(df):
         df[atr_imputed[i]] = df[atr_imputed[i]].replace(unknown_val[i], mode)
     return df
 
+def delete_instances(df):
+    atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
+    unknown_val = [9, 99, 99, 9, 99, 9, 9, 9, 99, 99, 9, 9, 9998, 9999, 9]
+    for i in range(len(atr_imputed)):
+        cond = False
+
+        mode = int(df[atr_imputed[i]].mode())
+        if(IMPRIME_INFO):
+            print("Cambiando en {} el valor {} por su moda: {}".format(atr_imputed[i], unknown_val[i], mode))
+        df[atr_imputed[i]] = df[atr_imputed[i]].replace(unknown_val[i], mode)
+    return df
+
+def imput(df):
+    if(IMPUT==0): df = imput_mean(df)
+    elif(IMPUT==1):  df = imput_mode(df)
+    elif(IMPUT==2):  df = delete_instances(df)
+    elif(IMPUT==3):  df = delete_attributes(df)
+    else: df = predict_values(df)
+    return df
+
 ########################
 #####     MAIN     #####
 ########################
@@ -198,8 +219,6 @@ def main():
         #for x in df_I.columns:
         #    print(df_I.groupby([x]).size())
 
-    #df, df_I = discretize(df, df_I)
-
     print("\n--> Variables sobre las que se va construir la etiqueta a predecir:")
     print(df.groupby(['PRPTYDMG_CRASH', 'INJURY_CRASH', 'FATALITIES']).size())
 
@@ -212,19 +231,15 @@ def main():
         print("\n--> Columnas por el momento:")
         print(df.columns)
         print(df_I.columns)
-
     print("\n--> Etiqueta a predecir:")
     print(df.groupby(['CRASH_TYPE']).size())
     #print(df_I.groupby(['CRASH_TYPE']).size())
 
-    for x in df.columns:
-        print(df.groupby([x]).size())
-    print("\n\n\n Escribo \n\n\n")
-    df = imput_mean(df)
-    print("\n\n\n Borro \n\n\n")
-    for x in df.columns:
-        print(df.groupby([x]).size())
-    #df = imput_mode(df)
+    # Imputando valores con la media o moda sobre df
+    df = imput(df)
+
+    # Discretización (es preferibles que se haga después de imputar)
+    df, df_I = discretize(df, df_I)
 
     # Conjuntos de entrenamiento y test
     feature_cols = ['MONTH', 'WEEKDAY', 'HOUR', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'MAN_COL', 'INT_HWY', 'REL_JCT',
