@@ -19,6 +19,9 @@ import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
+from matplotlib import pyplot as plt
+import numpy as np
 
 # Selección de características
 from sklearn.feature_selection import RFE
@@ -33,9 +36,10 @@ from six import StringIO
 from IPython.display import Image
 import pydotplus
 
-IMPRIME_INFO = True
-IMPUT_MODE = 2   # 0:mean, 1:mode, 2:delete_instances, 3:delete_attributes, 4:predict
-DRAW_TREE = False
+IMPRIME_INFO = True     # Indica si imprimir información
+IMPUT_MODE = 2          # 0:mean, 1:mode, 2:delete_instances, 3:delete_attributes, 4:predict
+SHOW_CONFUSSION = True	# Indica si se quiere imprimir algunas imágenes
+DRAW_TREE = False       # Indica si se debe pintar el árbol
 
 #############################
 #####     FUNCIONES     #####
@@ -267,6 +271,33 @@ def summarize_info(X_train, X_test, y_train, y_test, title=""):
     print("Tamaño de y_train: {}".format(y_train.shape))
     print("Tamaño de y_test: {}".format(y_test.shape))
 
+""" Muestra matriz de confusión.
+- y_real: etiquetas reales.
+- y_pred: etiquetas predichas.
+- message: mensaje que complementa la matriz de confusión.
+- norm (op): indica si normalizar (dar en %) la matriz de confusión. Por defecto 'True'.
+"""
+def show_confussion_matrix(y_real, y_pred, message="", norm=True):
+	mat = confusion_matrix(y_real, y_pred)
+	if(norm):
+		mat = 100*mat.astype("float64")/mat.sum(axis=1)[:, np.newaxis]
+	fig, ax = plt.subplots()
+	ax.matshow(mat, cmap="GnBu")
+	ax.set(title="Matriz de confusión {}".format(message),
+		   xticks=np.arange(3), yticks=np.arange(3),
+		   xlabel="Etiqueta", ylabel="Predicción")
+
+	for i in range(3):
+		for j in range(3):
+			if(norm):
+				ax.text(j, i, "{:.0f}%".format(mat[i, j]), ha="center", va="center",
+					color="black" if mat[i, j] < 50 else "white")
+			else:
+				ax.text(j, i, "{:.0f}".format(mat[i, j]), ha="center", va="center",
+					color="black" if mat[i, j] < 50 else "white")
+	plt.gcf().canvas.set_window_title("Práctica 1 - Preprocesamiento")
+	plt.show()
+
 def draw_png(clf, feature_cols, title="arbol.png"):
     dot_data = StringIO()
     export_graphviz(clf,
@@ -293,6 +324,13 @@ def run_model(X_train, X_test, y_train, y_test, feature_cols, imput=False):
     y_pred = clf.predict(X_test)
     # Accuracy del modelo
     print("Accuracy: {}".format(accuracy_score(y_test, y_pred)))
+    # Matriz de confusión
+    if(IMPRIME_INFO):
+        print("Matriz de confusión:")
+        print(confusion_matrix(y_test, y_pred))
+    if(SHOW_CONFUSSION):
+        show_confussion_matrix(y_test, y_pred, "sin normalizar", False)
+        show_confussion_matrix(y_test, y_pred, "normalizada")
     # Pintando el árbol
     if(DRAW_TREE):
         print("Pintando el árbol")
