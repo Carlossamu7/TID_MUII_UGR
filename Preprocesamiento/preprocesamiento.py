@@ -39,7 +39,7 @@ import pydotplus
 IMPRIME_INFO = True     # Indica si imprimir información
 IMPUT_MODE = 2          # 0:mean, 1:mode, 2:delete_instances, 3:delete_attributes, 4:predict
 SHOW_CONFUSSION = True	# Indica si se quiere imprimir algunas imágenes
-DRAW_TREE = False       # Indica si se debe pintar el árbol
+DRAW_TREE = True       # Indica si se debe pintar el árbol
 
 #############################
 #####     FUNCIONES     #####
@@ -231,15 +231,18 @@ def select_features(X, y, n_features, feature_cols):
     selector = selector.fit(X, y)
     to_select = selector.support_
     to_delete_attributes = []
+    features = []
     for i in range(len(feature_cols)):
         if(not to_select[i]):
             to_delete_attributes.append(feature_cols[i])
+        else:
+            features.append(feature_cols[i])
     if(IMPRIME_INFO):
         print("\nNum Features: %s" % (selector.n_features_))
         print("Selected Features: %s" % (selector.support_))
         print("Feature Ranking: %s" % (selector.ranking_))
         print(to_delete_attributes)
-    return X.drop(columns = to_delete_attributes)
+    return X.drop(columns = to_delete_attributes), features
 
 #######################################
 #####   SELECCIÓN DE INSTANCIAS   #####
@@ -391,8 +394,8 @@ def main():
     X_I, y_I = X_y_data(df_I, feature_cols_I, label)
 
     print("\nSeleccionando las características más importantes")
-    X = select_features(X, y, 15, feature_cols)
-    X_I = select_features(X_I, y_I, 15, feature_cols_I)
+    X, feature_cols = select_features(X, y, 15, feature_cols)
+    X_I, feature_cols_I = select_features(X_I, y_I, 15, feature_cols_I)
 
     print("\nDividiendo el conjunto de datos en entrenamiento y test (80%-20%)")
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1) # 80% training Y 20% test
