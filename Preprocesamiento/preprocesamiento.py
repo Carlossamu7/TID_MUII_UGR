@@ -45,6 +45,9 @@ DRAW_TREE = True       # Indica si se debe pintar el árbol
 #####     FUNCIONES     #####
 #############################
 
+""" Lectura de datos. Devuelve dos df, uno de ellos con las columnas imputadas.
+- mini (op): indica si leer 'accidentes_mini'. Por defecto 'True'.
+"""
 def read_data(mini=True):
     if(mini):
         df = pd.read_excel(r'accidentes_mini.xls', sheet_name='datos')
@@ -71,6 +74,10 @@ def read_data(mini=True):
 #####     DISCRETIZANDO     #####
 #################################
 
+""" Discretizando la variable 'HOUR'. Devuelve el df.
+- df: dataframe.
+- imputed (op): si es el imputado. Por defecto 'False'.
+"""
 def discretize_HOUR(df, imputed=False):
     if imputed:
         atribute = 'HOUR_I'
@@ -88,6 +95,10 @@ def discretize_HOUR(df, imputed=False):
             df[atribute][i] = 2
     return df
 
+""" Discretizando la variable 'WEEKDAY'. Devuelve el df.
+- df: dataframe.
+- imputed (op): si es el imputado. Por defecto 'False'.
+"""
 def discretize_WEEKDAY(df, imputed=False):
     if imputed:
         atribute = 'WKDY_I'
@@ -102,6 +113,10 @@ def discretize_WEEKDAY(df, imputed=False):
             df[atribute][i] = 1
     return df
 
+""" Discretizando la variable 'SPD_LIM'. Devuelve el df.
+- df: dataframe.
+- imputed (op): si es el imputado. Por defecto 'False'.
+"""
 def discretize_SPD_LIM(df, imputed=False):
     if imputed:
         atribute = 'SPDLIM_H'
@@ -120,6 +135,10 @@ def discretize_SPD_LIM(df, imputed=False):
     return df
 
 # A mi entender solo merece la pena discretizar las variables HOUR, WEEKDAY y SPD_LIM
+""" Discretización: 'HOUR', 'WEEKDAY' y 'SPD_LIM'. Devuelve el df.
+- df: dataframe.
+- df_I: dataframe imputado.
+"""
 def discretize(df, df_I):
     print("\nDiscretizando algunas variables")
 
@@ -153,6 +172,9 @@ def discretize(df, df_I):
 #####   IMPUTANDO LOS VALORES DESCONOCIDOS   #####
 ##################################################
 
+""" Imputando valores con la media. Devuelve el df.
+- df: dataframe.
+"""
 def imput_mean(df):
     atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND',
                    'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
@@ -164,6 +186,9 @@ def imput_mean(df):
         df[atr_imputed[i]] = df[atr_imputed[i]].replace(to_replace = unknown_val[i], value = mean)
     return df
 
+""" Imputando valores con la moda. Devuelve el df.
+- df: dataframe.
+"""
 def imput_mode(df):
     atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND',
                    'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
@@ -175,6 +200,9 @@ def imput_mode(df):
         df[atr_imputed[i]] = df[atr_imputed[i]].replace(unknown_val[i], mode)
     return df
 
+""" Borrando intancias con valores desconocidos. Devuelve el df.
+- df: dataframe.
+"""
 def delete_instances(df):
     # No considero SPEED_LIM que siempre es desconocido.
     atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON',
@@ -194,6 +222,9 @@ def delete_instances(df):
     del df['index']
     return df
 
+""" Borrando características que contienen valores desconocidos. Devuelve el df.
+- df: dataframe.
+"""
 def delete_attributes(df):
     # No considero SPEED_LIM que siempre es desconocido.
     atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON',
@@ -203,6 +234,9 @@ def delete_attributes(df):
     df = df.drop(columns = atr_imputed)
     return df
 
+""" Proceso de imputación. El tipo de imputación lo indica IMPUT_MODE. Devuelve el df.
+- df: dataframe.
+"""
 def imput(df):
     if(IMPUT_MODE==0):
         print("\nImputando algunos valores con la media")
@@ -225,6 +259,13 @@ def imput(df):
 #####   SELECCIÓN DE CARACTERÍSTICAS   #####
 ############################################
 
+""" Selecciona las características más relevantes usando Recursive Feature Elimination (RFE).
+Devuelve el df.
+- X: datos de entrada.
+- y: etiquetas.
+- n_features: número de características.
+- feature_cols: nombres de las columnas.
+"""
 def select_features(X, y, n_features, feature_cols):
     # Selección de características
     selector = RFE(DecisionTreeClassifier(), n_features)
@@ -248,6 +289,10 @@ def select_features(X, y, n_features, feature_cols):
 #####   SELECCIÓN DE INSTANCIAS   #####
 #######################################
 
+""" Seleccionando intancias con muestreo aleatorio. Devuelve el df.
+- df: dataframe.
+- frac: fracción entre 0 y 1 de los datos a coger.
+"""
 def select_instances(df, frac):
     df = df.sample(frac=frac, random_state=1)
     if(IMPRIME_INFO):
@@ -260,13 +305,28 @@ def select_instances(df, frac):
 #####   OTRAS FUNCIONES   #####
 ###############################
 
+""" Construyendo la variable de clase 'CRASH_TYPE'. Devuelve el df.
+- df: dataframe.
+"""
 def construct_class_variable(df):
     df['CRASH_TYPE'] = df['INJURY_CRASH'] + 2*df['FATALITIES']
     return df.drop(columns = ['PRPTYDMG_CRASH', 'INJURY_CRASH', 'FATALITIES'])
 
+""" Dividiendo en entrada y salida el df. Devuelve las entradas y salidas.
+- df: dataframe.
+- feature_cols: nombres de las columnas.
+- label: etiqueta a predecir.
+"""
 def X_y_data(df, feature_cols, label):
     return df[feature_cols], df[label]
 
+""" Dividiendo en entrada y salida el df.
+- X_train: datos de entrenamiento.
+- X_test: datos de test.
+- y_train: etiquetas del entrenamiento.
+- y_test: etiquetas de test.
+- title (op): título. Por defecto la cadena vacía.
+"""
 def summarize_info(X_train, X_test, y_train, y_test, title=""):
     print("\n------ Información del conjunto de datos " + title + "------")
     print("Tamaño de X_train: {}".format(X_train.shape))
@@ -301,6 +361,11 @@ def show_confussion_matrix(y_real, y_pred, message="", norm=True):
 	plt.gcf().canvas.set_window_title("Práctica 1 - Preprocesamiento")
 	plt.show()
 
+""" Dividiendo en entrada y salida el df.
+- clf: clasificador del modelo.
+- feature_cols: nombres de las columnas.
+- title (op): título del grafo. Por defecto 'arbol.png'.
+"""
 def draw_png(clf, feature_cols, title="arbol.png"):
     dot_data = StringIO()
     export_graphviz(clf,
@@ -314,6 +379,14 @@ def draw_png(clf, feature_cols, title="arbol.png"):
     graph.write_png(title)
     Image(graph.create_png())
 
+""" Dividiendo en entrada y salida el df.
+- X_train: datos de entrenamiento.
+- X_test: datos de test.
+- y_train: etiquetas del entrenamiento.
+- y_test: etiquetas de test.
+- feature_cols: nombres de las columnas.
+- imput (op): indica si son los datos imputados. Por defecto 'False'.
+"""
 def run_model(X_train, X_test, y_train, y_test, feature_cols, imput=False):
     # El clasificador es un árbol de decisión
     print("Construyendo el árbol de decisión")
