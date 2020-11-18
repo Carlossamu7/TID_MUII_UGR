@@ -22,6 +22,7 @@ from sklearn.metrics import accuracy_score
 
 # Selección de características
 from sklearn.feature_selection import RFE
+
 # Silenciar warnings
 from warnings import simplefilter
 simplefilter(action='ignore', category=FutureWarning)
@@ -36,6 +37,10 @@ IMPRIME_INFO = True
 IMPUT_MODE = 2   # 0:mean, 1:mode, 2:delete_instances, 3:delete_attributes, 4:predict
 DRAW_TREE = False
 
+#############################
+#####     FUNCIONES     #####
+#############################
+
 def read_data(mini=True):
     if(mini):
         df = pd.read_excel(r'accidentes_mini.xls', sheet_name='datos')
@@ -47,6 +52,15 @@ def read_data(mini=True):
                             'TRFCON_I', 'SPDLIM_H', 'LGTCON_I', 'WEATHR_I', 'ALCHL_I'])
     df_I = df_I.drop(columns = ['WEEKDAY', 'HOUR', 'MAN_COL', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND',
                                 'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'ALCOHOL'])
+    if(IMPRIME_INFO):
+        print()
+        print(df.info())
+        print()
+        print(df_I.info())
+        #for x in df.columns:
+        #    print(df.groupby([x]).size())
+        #for x in df_I.columns:
+        #    print(df_I.groupby([x]).size())
     return df, df_I
 
 #################################
@@ -223,6 +237,18 @@ def select_features(X, y, n_features, feature_cols):
         print(to_delete_attributes)
     return X.drop(columns = to_delete_attributes)
 
+#######################################
+#####   SELECCIÓN DE INSTANCIAS   #####
+#######################################
+
+def select_instances(df, frac):
+    df = df.sample(frac=frac, random_state=1)
+    if(IMPRIME_INFO):
+        print("  Selección de {} instancias aleatorias".format(df.shape[0]))
+    df=df.reset_index()
+    del df['index']
+    return df
+
 ###############################
 #####   OTRAS FUNCIONES   #####
 ###############################
@@ -257,8 +283,8 @@ def draw_png(clf, feature_cols, title="arbol.png"):
 def run_model(X_train, X_test, y_train, y_test, feature_cols, imput=False):
     # El clasificador es un árbol de decisión
     print("Construyendo el árbol de decisión")
-    clf = DecisionTreeClassifier()
-    #clf = DecisionTreeClassifier(criterion="entropy", max_depth=3)
+    clf = DecisionTreeClassifier(max_depth=10)
+    #clf = DecisionTreeClassifier(criterion="entropy", max_depth=10)
     # Entrenando el árbol
     print("Entrenando el árbol de decisión")
     clf = clf.fit(X_train, y_train)
@@ -283,15 +309,9 @@ def main():
     print("Leyendo el conjunto de datos")
     df, df_I = read_data()
 
-    if(IMPRIME_INFO):
-        print()
-        print(df.info())
-        print()
-        print(df_I.info())
-        #for x in df.columns:
-        #    print(df.groupby([x]).size())
-        #for x in df_I.columns:
-        #    print(df_I.groupby([x]).size())
+    print("\nSeleccionando instancias")
+    df = select_instances(df, 0.7)
+    df_I = select_instances(df_I, 0.7)
 
     print("\n--> Variables sobre las que se va construir la etiqueta a predecir:")
     print(df.groupby(['PRPTYDMG_CRASH', 'INJURY_CRASH', 'FATALITIES']).size())
