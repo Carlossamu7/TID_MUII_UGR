@@ -25,8 +25,9 @@ from six import StringIO
 from IPython.display import Image
 import pydotplus
 
-IMPRIME_INFO = False
-IMPUT = 2   # 0:mean, 1:mode, 2:delete_instances, 3:delete_attributes, 4:predict
+IMPRIME_INFO = True
+IMPUT_MODE = 3   # 0:mean, 1:mode, 2:delete_instances, 3:delete_attributes, 4:predict
+DRAW_TREE = False
 
 def read_data(mini=True):
     if(mini):
@@ -40,6 +41,10 @@ def read_data(mini=True):
     df_I = df_I.drop(columns = ['WEEKDAY', 'HOUR', 'MAN_COL', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND',
                                 'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'ALCOHOL'])
     return df, df_I
+
+#################################
+#####     DISCRETIZANDO     #####
+#################################
 
 def discretize_HOUR(df, imputed=False):
     if imputed:
@@ -119,50 +124,9 @@ def discretize(df, df_I):
 
     return df, df_I
 
-def construct_class_variable(df):
-    df['CRASH_TYPE'] = df['INJURY_CRASH'] + 2*df['FATALITIES']
-    return df.drop(columns = ['PRPTYDMG_CRASH', 'INJURY_CRASH', 'FATALITIES'])
-
-def train_test_data(df, feature_cols, label):
-    X = df[feature_cols]
-    y = df[label]
-    return train_test_split(X, y, test_size=0.2, random_state=1) # 80% training Y 20% test
-
-def summarize_info(X_train, X_test, y_train, y_test, title=""):
-    print("\n------ Información del conjunto de datos " + title + "------")
-    print("Tamaño de X_train: {}".format(X_train.shape))
-    print("Tamaño de X_test: {}".format(X_test.shape))
-    print("Tamaño de y_train: {}".format(y_train.shape))
-    print("Tamaño de y_test: {}\n".format(y_test.shape))
-
-def draw_png(clf, feature_cols, title="arbol.png"):
-    dot_data = StringIO()
-    export_graphviz(clf,
-                    out_file=dot_data,
-                    filled=True,
-                    rounded=True,
-                    special_characters=True,
-                    feature_names=feature_cols,
-                    class_names=['0','1','2'])
-    graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
-    graph.write_png(title)
-    Image(graph.create_png())
-
-def run_model(X_train, X_test, y_train, y_test):
-    # El clasificador es un árbol de decisión
-    print("Construyendo el árbol de decisión")
-    clf = DecisionTreeClassifier()
-    #clf = DecisionTreeClassifier(criterion="entropy", max_depth=3)
-    # Entrenando el árbol
-    print("Entrenando el árbol de decisión")
-    clf = clf.fit(X_train, y_train)
-    # Prediciendo la etiqueta
-    print("Prediciendo etiquetas")
-    y_pred = clf.predict(X_test)
-    # Accuracy del modelo
-    print("Accuracy: {}".format(accuracy_score(y_test, y_pred)))
-    # Pintando el árbol
-    #draw_png(clf, feature_cols)
+##################################################
+#####   IMPUTANDO LOS VALORES DESCONOCIDOS   #####
+##################################################
 
 def imput_mean(df):
     atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND',
@@ -205,23 +169,85 @@ def delete_instances(df):
         print("Número de instancias a eliminar: {}".format(len(to_delete)))
     return df
 
-def imput(df):
-    if(IMPUT==0):
-        df = imput_mean(df)
-        print("\nImputando algunos valores con la media")
-    elif(IMPUT==1):
-        df = imput_mode(df)
-        print("\nImputando algunos valores con la moda")
-    elif(IMPUT==2):
-        df = delete_instances(df)
-        print("\nBorrando instancias con valores desconocidos")
-    elif(IMPUT==3):
-        df = delete_attributes(df)
-        print("\nBorrando atributos con valores desconocidos")
-    else:
-        df = predict_values(df)
-        print("\nPrediciento atributos")
+def delete_attributes(df):
+    # No considero SPEED_LIM que siempre es desconocido.
+    atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON',
+                   'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'ALCOHOL']
+    df = df.drop(columns = atr_imputed)
+    if(IMPRIME_INFO):
+        print("Número de atributos a eliminar: {}".format(len(atr_imputed)))
     return df
+
+def imput(df):
+    if(IMPUT_MODE==0):
+        print("\nImputando algunos valores con la media")
+        df = imput_mean(df)
+    elif(IMPUT_MODE==1):
+        print("\nImputando algunos valores con la moda")
+        df = imput_mode(df)
+    elif(IMPUT_MODE==2):
+        print("\nBorrando instancias con valores desconocidos")
+        df = delete_instances(df)
+    elif(IMPUT_MODE==3):
+        print("\nBorrando atributos con valores desconocidos")
+        df = delete_attributes(df)
+    else:
+        print("\nPrediciento atributos")
+        df = predict_values(df)
+    return df
+
+###############################
+#####   OTRAS FUNCIONES   #####
+###############################
+
+def construct_class_variable(df):
+    df['CRASH_TYPE'] = df['INJURY_CRASH'] + 2*df['FATALITIES']
+    return df.drop(columns = ['PRPTYDMG_CRASH', 'INJURY_CRASH', 'FATALITIES'])
+
+def train_test_data(df, feature_cols, label):
+    X = df[feature_cols]
+    y = df[label]
+    return train_test_split(X, y, test_size=0.2, random_state=1) # 80% training Y 20% test
+
+def summarize_info(X_train, X_test, y_train, y_test, title=""):
+    print("\n------ Información del conjunto de datos " + title + "------")
+    print("Tamaño de X_train: {}".format(X_train.shape))
+    print("Tamaño de X_test: {}".format(X_test.shape))
+    print("Tamaño de y_train: {}".format(y_train.shape))
+    print("Tamaño de y_test: {}".format(y_test.shape))
+
+def draw_png(clf, feature_cols, title="arbol.png"):
+    dot_data = StringIO()
+    export_graphviz(clf,
+                    out_file=dot_data,
+                    filled=True,
+                    rounded=True,
+                    special_characters=True,
+                    feature_names=feature_cols,
+                    class_names=['0','1','2'])
+    graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+    graph.write_png(title)
+    Image(graph.create_png())
+
+def run_model(X_train, X_test, y_train, y_test, feature_cols, imput=False):
+    # El clasificador es un árbol de decisión
+    print("Construyendo el árbol de decisión")
+    clf = DecisionTreeClassifier()
+    #clf = DecisionTreeClassifier(criterion="entropy", max_depth=3)
+    # Entrenando el árbol
+    print("Entrenando el árbol de decisión")
+    clf = clf.fit(X_train, y_train)
+    # Prediciendo la etiqueta
+    print("Prediciendo etiquetas")
+    y_pred = clf.predict(X_test)
+    # Accuracy del modelo
+    print("Accuracy: {}".format(accuracy_score(y_test, y_pred)))
+    # Pintando el árbol
+    if(DRAW_TREE):
+        print("Pintando el árbol")
+        if(imput): title = "tree_I.png"
+        else: title = "tree.png"
+        draw_png(clf, feature_cols, title)
 
 ########################
 #####     MAIN     #####
@@ -233,7 +259,9 @@ def main():
     df, df_I = read_data()
 
     if(IMPRIME_INFO):
+        print()
         print(df.info())
+        print()
         print(df_I.info())
         #for x in df.columns:
         #    print(df.groupby([x]).size())
@@ -258,14 +286,20 @@ def main():
 
     # Imputando valores con la media o moda sobre df
     df = imput(df)
+    print(df)
 
     # Discretización (es preferibles que se haga después de imputar)
-    df, df_I = discretize(df, df_I)
+    if(IMPUT_MODE!=3):  # En ese caso las variables a discretizar han sido eliminadas
+        df, df_I = discretize(df, df_I)
 
     # Conjuntos de entrenamiento y test
-    feature_cols = ['MONTH', 'WEEKDAY', 'HOUR', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'MAN_COL', 'INT_HWY', 'REL_JCT',
-                    'REL_RWY', 'TRAF_WAY', 'NUM_LAN', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON',
-                    'WEATHER', 'SCHL_BUS', 'PED_ACC', 'ALCOHOL', 'REGION', 'WRK_ZONE']
+    if(IMPUT_MODE==3):
+        feature_cols = ['MONTH', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'REL_RWY', 'TRAF_WAY', 'NUM_LAN',
+                        'SCHL_BUS', 'REGION', 'WRK_ZONE']
+    else:
+        feature_cols = ['MONTH', 'WEEKDAY', 'HOUR', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'MAN_COL', 'INT_HWY', 'REL_JCT',
+                        'REL_RWY', 'TRAF_WAY', 'NUM_LAN', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON',
+                        'WEATHER', 'SCHL_BUS', 'PED_ACC', 'ALCOHOL', 'REGION', 'WRK_ZONE']
     feature_cols_I = ['MONTH', 'WKDY_I', 'HOUR_I', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'MANCOL_I', 'INT_HWY', 'RELJCT_I',
                       'REL_RWY', 'TRAF_WAY', 'NUM_LAN', 'ALIGN_I', 'PROFIL_I', 'SURCON_I', 'TRFCON_I', 'SPDLIM_H', 'LGTCON_I',
                       'WEATHR_I', 'SCHL_BUS', 'PED_ACC', 'ALCHL_I', 'REGION', 'WRK_ZONE']
@@ -279,9 +313,9 @@ def main():
 
     # EJECUTANDO EL ALGORITMO SOBRE LOS DATOS IMPUTADOS Y SIN IMPUTAR
     print("\n------ Ejecutando el modelo sobre los datos sin imputar ------")
-    run_model(X_train, X_test, y_train, y_test)
+    run_model(X_train, X_test, y_train, y_test, feature_cols)
     print("\n------ Ejecutando el modelo sobre los datos imputados ------")
-    run_model(X_I_train, X_I_test, y_I_train, y_I_test)
+    run_model(X_I_train, X_I_test, y_I_train, y_I_test, feature_cols_I, True)
 
 
 if __name__ == "__main__":
