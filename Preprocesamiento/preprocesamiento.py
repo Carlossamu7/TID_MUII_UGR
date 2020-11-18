@@ -6,18 +6,25 @@
 @date: 1 de noviembre de 2020
 """
 
-############################
-###   Preprocesamiento   ###
-############################
+"""
+P1- PREPROCESAMIENTO
+"""
 
 #############################
 #####     LIBRERIAS     #####
 #############################
 
+# Para el modelo
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+
+# Selección de características
+from sklearn.feature_selection import RFE
+# Silenciar warnings
+from warnings import simplefilter
+simplefilter(action='ignore', category=FutureWarning)
 
 # Para imprimir el árbol
 from sklearn.tree import export_graphviz
@@ -26,7 +33,7 @@ from IPython.display import Image
 import pydotplus
 
 IMPRIME_INFO = True
-IMPUT_MODE = 3   # 0:mean, 1:mode, 2:delete_instances, 3:delete_attributes, 4:predict
+IMPUT_MODE = 2   # 0:mean, 1:mode, 2:delete_instances, 3:delete_attributes, 4:predict
 DRAW_TREE = False
 
 def read_data(mini=True):
@@ -162,20 +169,20 @@ def delete_instances(df):
             if(df.iloc(0)[i][atr_imputed[j]]==unknown_val[j]):
                 cond = True
                 to_delete.append(i)
+    if(IMPRIME_INFO):
+        print("Número de instancias a eliminar: {}".format(len(to_delete)))
     df = df.drop(to_delete, axis=0)
     df=df.reset_index()
     del df['index']
-    if(IMPRIME_INFO):
-        print("Número de instancias a eliminar: {}".format(len(to_delete)))
     return df
 
 def delete_attributes(df):
     # No considero SPEED_LIM que siempre es desconocido.
     atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON',
                    'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'ALCOHOL']
-    df = df.drop(columns = atr_imputed)
     if(IMPRIME_INFO):
         print("Número de atributos a eliminar: {}".format(len(atr_imputed)))
+    df = df.drop(columns = atr_imputed)
     return df
 
 def imput(df):
@@ -196,6 +203,26 @@ def imput(df):
         df = predict_values(df)
     return df
 
+############################################
+#####   SELECCIÓN DE CARACTERÍSTICAS   #####
+############################################
+
+def select_features(X, y, n_features, feature_cols):
+    # Selección de características
+    selector = RFE(DecisionTreeClassifier(), n_features)
+    selector = selector.fit(X, y)
+    to_select = selector.support_
+    to_delete_attributes = []
+    for i in range(len(feature_cols)):
+        if(not to_select[i]):
+            to_delete_attributes.append(feature_cols[i])
+    if(IMPRIME_INFO):
+        print("\nNum Features: %s" % (selector.n_features_))
+        print("Selected Features: %s" % (selector.support_))
+        print("Feature Ranking: %s" % (selector.ranking_))
+        print(to_delete_attributes)
+    return X.drop(columns = to_delete_attributes)
+
 ###############################
 #####   OTRAS FUNCIONES   #####
 ###############################
@@ -204,10 +231,8 @@ def construct_class_variable(df):
     df['CRASH_TYPE'] = df['INJURY_CRASH'] + 2*df['FATALITIES']
     return df.drop(columns = ['PRPTYDMG_CRASH', 'INJURY_CRASH', 'FATALITIES'])
 
-def train_test_data(df, feature_cols, label):
-    X = df[feature_cols]
-    y = df[label]
-    return train_test_split(X, y, test_size=0.2, random_state=1) # 80% training Y 20% test
+def X_y_data(df, feature_cols, label):
+    return df[feature_cols], df[label]
 
 def summarize_info(X_train, X_test, y_train, y_test, title=""):
     print("\n------ Información del conjunto de datos " + title + "------")
@@ -286,7 +311,6 @@ def main():
 
     # Imputando valores con la media o moda sobre df
     df = imput(df)
-    print(df)
 
     # Discretización (es preferibles que se haga después de imputar)
     if(IMPUT_MODE!=3):  # En ese caso las variables a discretizar han sido eliminadas
@@ -304,9 +328,17 @@ def main():
                       'REL_RWY', 'TRAF_WAY', 'NUM_LAN', 'ALIGN_I', 'PROFIL_I', 'SURCON_I', 'TRFCON_I', 'SPDLIM_H', 'LGTCON_I',
                       'WEATHR_I', 'SCHL_BUS', 'PED_ACC', 'ALCHL_I', 'REGION', 'WRK_ZONE']
     label = 'CRASH_TYPE'
+    print("\nDividiendo el conjunto de datos en entrada (X) y salida (y)")
+    X, y = X_y_data(df, feature_cols, label)
+    X_I, y_I = X_y_data(df_I, feature_cols_I, label)
+
+    print("\nSeleccionando las características más importantes")
+    X = select_features(X, y, 15, feature_cols)
+    X_I = select_features(X_I, y_I, 15, feature_cols_I)
+
     print("\nDividiendo el conjunto de datos en entrenamiento y test (80%-20%)")
-    X_train, X_test, y_train, y_test = train_test_data(df, feature_cols, label)
-    X_I_train, X_I_test, y_I_train, y_I_test = train_test_data(df_I, feature_cols_I, label)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1) # 80% training Y 20% test
+    X_I_train, X_I_test, y_I_train, y_I_test = train_test_split(X_I, y_I, test_size=0.2, random_state=1)
 
     summarize_info(X_train, X_test, y_train, y_test)
     summarize_info(X_I_train, X_I_test, y_I_train, y_I_test, "imputados ")
