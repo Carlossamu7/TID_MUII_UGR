@@ -8,13 +8,13 @@ Repositorio para la asignatura **Tratamiento Inteligente de Datos** del Máster 
 
 Las prácticas de esta asignatura son las siguientes:
 
-- [Preprocesamiento](https://github.com/Carlossamu7/TID_MUII_UGR/milestone/1). Base de datos: `accidentes.xml`
+- [Preprocesamiento](https://github.com/Carlossamu7/TID_MUII_UGR/milestone/1). Base de datos: `accidentes.xls`.
     - Consultar [código](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Preprocesamiento/preprocesamiento.py).
     - Consultar [datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Preprocesamiento/accidentes.xls) y [subconjunto de los datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Preprocesamiento/accidentes_mini.xls).
 
 - [Agrupamiento](https://github.com/Carlossamu7/TID_MUII_UGR/milestone/2). Base de datos: `wine.dat`.
     - Consultar código.
-    - Consultar [datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Agrupamiento/wine.dat) y su [descripción](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Agrupamiento/wine_names.txt).
+    - Consultar [datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Agrupamiento/wine.data) y su [descripción](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Agrupamiento/wine_names.txt).
 
 ## Licencia
 
