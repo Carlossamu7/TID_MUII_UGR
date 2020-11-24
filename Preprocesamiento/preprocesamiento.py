@@ -301,6 +301,40 @@ def select_instances(df, frac):
     del df['index']
     return df
 
+""" Borra una clase para testear el desbalanceo de datos.
+- df: dataframe.
+- clas: clase a borrar.
+"""
+def delete_class(df, clas):
+    to_delete = []
+    for i in range(len(df)):
+        if(df.iloc(0)[i]["CRASH_TYPE"]==clas):
+            to_delete.append(i)
+    if(IMPRIME_INFO):
+        print("Número de instancias a eliminar: {}".format(len(to_delete)))
+    df = df.drop(to_delete, axis=0)
+    df=df.reset_index()
+    del df['index']
+    return df
+
+""" Elige aleatoriamente tantas instancias de la clase distinta a la clase '2' como instancias tiene '2'.
+- df: dataframe.
+"""
+def select_n_instances(df):
+    #seleccionamos un subconjunto
+    num = df.groupby(['CRASH_TYPE']).size()[2] # número de instancias de la clase 2
+    df_copy = delete_class(df, 2)
+    df_copy = df_copy.sample(n=num, random_state=1)
+    if(IMPRIME_INFO):
+        print("Selección de {} instancias aleatorias".format(df_copy.shape[0]))
+    df_copy=df_copy.reset_index()
+    del df_copy['index']
+    df_2 = df[df["CRASH_TYPE"] == 2]
+    df = pd.concat([df_2, df_copy])
+    df = df.reset_index()
+    del df['index']
+    return df
+
 ###############################
 #####   OTRAS FUNCIONES   #####
 ###############################
@@ -385,9 +419,10 @@ def draw_png(clf, feature_cols, title="arbol.png"):
 - y_train: etiquetas del entrenamiento.
 - y_test: etiquetas de test.
 - feature_cols: nombres de las columnas.
-- imput (op): indica si son los datos imputados. Por defecto 'False'.
+- draw_t_title: título del árbol.
+- show_conf: indica si se debe de mostrar la matriz de confusión. Por defecto 'True'.
 """
-def run_model(X_train, X_test, y_train, y_test, feature_cols, imput=False):
+def run_model(X_train, X_test, y_train, y_test, feature_cols, draw_t_title, show_conf=True):
     # El clasificador es un árbol de decisión
     print("Construyendo el árbol de decisión")
     clf = DecisionTreeClassifier(max_depth=10)
@@ -404,15 +439,56 @@ def run_model(X_train, X_test, y_train, y_test, feature_cols, imput=False):
     if(IMPRIME_INFO):
         print("Matriz de confusión:")
         print(confusion_matrix(y_test, y_pred))
-    if(SHOW_CONFUSSION):
+    if(SHOW_CONFUSSION and show_conf):
         show_confussion_matrix(y_test, y_pred, "sin normalizar", False)
         show_confussion_matrix(y_test, y_pred, "normalizada")
     # Pintando el árbol
     if(DRAW_TREE):
         print("Pintando el árbol")
-        if(imput): title = "tree_I.png"
-        else: title = "tree.png"
-        draw_png(clf, feature_cols, title)
+        draw_png(clf, feature_cols, draw_t_title)
+
+""" Todo el proceso de imputación, discretización, selección de atributos/instancias y clasificación
+del árbol. Este método es útil para replicarlo luego en el desbalanceo de datos al enfrentar la clase minoritaria
+contra el resto.
+- df: dataframe.
+- df_I: dataframe imputado.
+- show_conf: indica si se debe de mostrar la matriz de confusión. Por defecto 'True'.
+- draw_t_title: título del árbol. Por defecto "tree".
+"""
+def process(df, df_I, show_conf=True, draw_t_title="tree"):
+    # Conjuntos de entrenamiento y test
+    if(IMPUT_MODE==3):
+        feature_cols = ['MONTH', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'REL_RWY', 'TRAF_WAY', 'NUM_LAN',
+                        'SCHL_BUS', 'REGION', 'WRK_ZONE']
+    else:
+        feature_cols = ['MONTH', 'WEEKDAY', 'HOUR', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'MAN_COL', 'INT_HWY', 'REL_JCT',
+                        'REL_RWY', 'TRAF_WAY', 'NUM_LAN', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON',
+                        'WEATHER', 'SCHL_BUS', 'PED_ACC', 'ALCOHOL', 'REGION', 'WRK_ZONE']
+    feature_cols_I = ['MONTH', 'WKDY_I', 'HOUR_I', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'MANCOL_I', 'INT_HWY', 'RELJCT_I',
+                      'REL_RWY', 'TRAF_WAY', 'NUM_LAN', 'ALIGN_I', 'PROFIL_I', 'SURCON_I', 'TRFCON_I', 'SPDLIM_H', 'LGTCON_I',
+                      'WEATHR_I', 'SCHL_BUS', 'PED_ACC', 'ALCHL_I', 'REGION', 'WRK_ZONE']
+    label = 'CRASH_TYPE'
+    print("\nDividiendo el conjunto de datos en entrada (X) y salida (y)")
+    X, y = X_y_data(df, feature_cols, label)
+    X_I, y_I = X_y_data(df_I, feature_cols_I, label)
+
+    print("\nSeleccionando las características más importantes")
+    X, feature_cols = select_features(X, y, 15, feature_cols)
+    X_I, feature_cols_I = select_features(X_I, y_I, 15, feature_cols_I)
+
+    print("\nDividiendo el conjunto de datos en entrenamiento y test (80%-20%)")
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1) # 80% training Y 20% test
+    X_I_train, X_I_test, y_I_train, y_I_test = train_test_split(X_I, y_I, test_size=0.2, random_state=1)
+
+    summarize_info(X_train, X_test, y_train, y_test)
+    summarize_info(X_I_train, X_I_test, y_I_train, y_I_test, "imputados ")
+
+    # EJECUTANDO EL ALGORITMO SOBRE LOS DATOS IMPUTADOS Y SIN IMPUTAR
+    print("\n------ Ejecutando el modelo sobre los datos sin imputar ------")
+    run_model(X_train, X_test, y_train, y_test, feature_cols, draw_t_title + ".png", show_conf)
+    print("\n------ Ejecutando el modelo sobre los datos imputados ------")
+    run_model(X_I_train, X_I_test, y_I_train, y_I_test, feature_cols_I, draw_t_title + "_I.png", show_conf)
+
 
 ########################
 #####     MAIN     #####
@@ -450,38 +526,25 @@ def main():
     if(IMPUT_MODE!=3):  # En ese caso las variables a discretizar han sido eliminadas
         df, df_I = discretize(df, df_I)
 
-    # Conjuntos de entrenamiento y test
-    if(IMPUT_MODE==3):
-        feature_cols = ['MONTH', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'REL_RWY', 'TRAF_WAY', 'NUM_LAN',
-                        'SCHL_BUS', 'REGION', 'WRK_ZONE']
-    else:
-        feature_cols = ['MONTH', 'WEEKDAY', 'HOUR', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'MAN_COL', 'INT_HWY', 'REL_JCT',
-                        'REL_RWY', 'TRAF_WAY', 'NUM_LAN', 'ALIGN', 'PROFILE', 'SUR_COND', 'TRAF_CON', 'SPD_LIM', 'LGHT_CON',
-                        'WEATHER', 'SCHL_BUS', 'PED_ACC', 'ALCOHOL', 'REGION', 'WRK_ZONE']
-    feature_cols_I = ['MONTH', 'WKDY_I', 'HOUR_I', 'VEH_INVL', 'NON_INVL', 'LAND_USE', 'MANCOL_I', 'INT_HWY', 'RELJCT_I',
-                      'REL_RWY', 'TRAF_WAY', 'NUM_LAN', 'ALIGN_I', 'PROFIL_I', 'SURCON_I', 'TRFCON_I', 'SPDLIM_H', 'LGTCON_I',
-                      'WEATHR_I', 'SCHL_BUS', 'PED_ACC', 'ALCHL_I', 'REGION', 'WRK_ZONE']
-    label = 'CRASH_TYPE'
-    print("\nDividiendo el conjunto de datos en entrada (X) y salida (y)")
-    X, y = X_y_data(df, feature_cols, label)
-    X_I, y_I = X_y_data(df_I, feature_cols_I, label)
+    process(df, df_I)
 
-    print("\nSeleccionando las características más importantes")
-    X, feature_cols = select_features(X, y, 15, feature_cols)
-    X_I, feature_cols_I = select_features(X_I, y_I, 15, feature_cols_I)
+    # DESBALANCEO DE DATOS: enfrento la clase minoritaria contra el resto.
+    print("\n---------------------------------------------------------------------")
+    print("------ DESBALANCEO DE DATOS: clase minoritaria contra el resto ------")
+    print("---------------------------------------------------------------------")
+    print("\n------ Borrada la clase 1 ------\n")
+    df_0_2 = delete_class(df, 1)
+    df_0_2 = select_n_instances(df_0_2)
+    df_0_2_I = delete_class(df_I, 1)
+    df_0_2_I = select_n_instances(df_0_2_I)
+    process(df_0_2, df_0_2_I, False, "tree_0_2")    # Quedan 8 instancias por lo que queda muy regular
 
-    print("\nDividiendo el conjunto de datos en entrenamiento y test (80%-20%)")
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1) # 80% training Y 20% test
-    X_I_train, X_I_test, y_I_train, y_I_test = train_test_split(X_I, y_I, test_size=0.2, random_state=1)
-
-    summarize_info(X_train, X_test, y_train, y_test)
-    summarize_info(X_I_train, X_I_test, y_I_train, y_I_test, "imputados ")
-
-    # EJECUTANDO EL ALGORITMO SOBRE LOS DATOS IMPUTADOS Y SIN IMPUTAR
-    print("\n------ Ejecutando el modelo sobre los datos sin imputar ------")
-    run_model(X_train, X_test, y_train, y_test, feature_cols)
-    print("\n------ Ejecutando el modelo sobre los datos imputados ------")
-    run_model(X_I_train, X_I_test, y_I_train, y_I_test, feature_cols_I, True)
+    print("\n------ Borrada la clase 0 ------\n")
+    df_1_2 = delete_class(df, 0)
+    df_1_2 = select_n_instances(df_1_2)
+    df_1_2_I = delete_class(df_I, 0)
+    df_1_2_I = select_n_instances(df_1_2_I)
+    process(df_1_2, df_1_2_I, False, "tree_1_2")   # Quedan 8 instancias por lo que queda muy regular
 
 
 if __name__ == "__main__":
