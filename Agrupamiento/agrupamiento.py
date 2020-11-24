@@ -96,13 +96,14 @@ def get_k_medias(X):
 - labels: etiquetas predichas.
 """
 def plot_cluster_primera_variable(X, kmeans, labels):
-    print("\nAgrupación de clusters respecto de la primera variable...")
-    plt.scatter(X[labels  == 0]["Alcohol"], X[labels  == 0]["Alcohol"], s=10,c='red', label='Class 1')
-    plt.scatter(X[labels  == 1]["Alcohol"], X[labels  == 1]["Alcohol"], s=10,c='green', label='Class 2')
-    plt.scatter(X[labels  == 2]["Alcohol"], X[labels  == 2]["Alcohol"], s=10,c='purple', label='Class 3')
-    plt.scatter(kmeans.cluster_centers_[0][0], kmeans.cluster_centers_[0][0], marker="*", s=100, c='red', label='Centroide 1')
-    plt.scatter(kmeans.cluster_centers_[1][0], kmeans.cluster_centers_[1][0], marker="*", s=100, c='green', label='Centroide 2')
-    plt.scatter(kmeans.cluster_centers_[2][0], kmeans.cluster_centers_[2][0], marker="*", s=100, c='purple', label='Centroide 3')
+    kmeans = KMeans(n_clusters=3)
+    y_kmeans =kmeans.fit_predict(X.iloc[:,0:2])
+    X = X.iloc[:,0:2].values
+
+    plt.scatter(X[y_kmeans==0, 0], X[y_kmeans==0, 1], s=10, c='red', label='Clase 1')
+    plt.scatter(X[y_kmeans==1, 0], X[y_kmeans==1, 1], s=10, c='blue', label='Clase 2')
+    plt.scatter(X[y_kmeans==2, 0], X[y_kmeans==2, 1], s=10, c='green', label='Clase 3')
+    plt.scatter(kmeans.cluster_centers_[:,0], kmeans.cluster_centers_[:,1], s=100, marker="*", c='black', label='Centroides')
     plt.legend()
     plt.title("Clusters de clases")
     plt.gcf().canvas.set_window_title("Práctica 2 - Agrupamiento")
