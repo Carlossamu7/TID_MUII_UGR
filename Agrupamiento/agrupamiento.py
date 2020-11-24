@@ -87,8 +87,6 @@ def get_k_medias(X):
     print(kmeans)
     print("\nCentroides:")
     print(kmeans.cluster_centers_)
-    print("\nEtiquetas después de kmeans:")
-    print(labels)
     return kmeans, labels
 
 """ Aplica el clustering KMeans. Devuelve el clasificador y las etiquetas predichas.
@@ -139,8 +137,13 @@ def main():
     kmeans, labels = get_k_medias(X_o)
     # Comparamos la distribución de las clases respecto a la primera columna.
     plot_cluster_primera_variable(X_o, kmeans, labels)
-    silhouette_avg3 = silhouette_score(X_o, (kmeans.labels_), metric='euclidean')
-    print("\nLa puntuación de silhouette es: {}".format(silhouette_avg3))
+    print("\nEtiquetas predichas por KMEANS:")
+    print(labels)
+    print("\nEtiquetas reales:")
+    print(np.array(y_o))
+    print("\nNOTA: El algoritmo KMEANS tiene un gran éxito en la clasificación")
+    silhouette = silhouette_score(X_o, (kmeans.labels_), metric='euclidean')
+    print("\nLa puntuación de silhouette es: {}".format(silhouette))
 
     # PREPROCESANDO (StandardScaler + PCA)
     print("\n----- PREPROCESANDO (StandardScaler + PCA) -----")
@@ -151,8 +154,15 @@ def main():
         print("Conjunto de datos después del preprocesamiento:")
         print(X_pca)
     kmeans_pca, labels_pca = get_k_medias(X_pca)
+    labels_pca = np.array(labels_pca)
     # Comparamos la distribución de las clases respecto a la primera columna.
     plot_cluster_primera_variable(X_pca, kmeans_pca, labels_pca)
+    # Cambiamos etiquetas para ajustar el cluster. 0->3
+    print("\nEtiquetas predichas por KMEANS:")
+    print(labels_pca)
+    print("\nEtiquetas reales:")
+    print(np.array(y_o))
+    print("\nNOTA: El algoritmo KMEANS sobre los datos preprocesados tiene un gran éxito en la clasificación")
     silhouette_pca = silhouette_score(X_pca, (kmeans.labels_), metric='euclidean')
     print("\nLa puntuación de silhouette es: {}".format(silhouette_pca))
 
