@@ -15,17 +15,19 @@ P2- AGRUPAMIENTO
 #############################
 
 import pandas as pd
+import numpy as np
 import scipy.cluster.hierarchy as sch
 from matplotlib import pyplot as plt
-from sklearn.cluster import AgglomerativeClustering
-import numpy as np
-from scipy import stats
 from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
+from sklearn.metrics import silhouette_score, confusion_matrix
+from scipy import stats
 
 # Preprocesado
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+
+# DBSCAN
+from sklearn.cluster import DBSCAN
 
 IMPRIME_INFO = True     # Indica si imprimir información
 
@@ -82,7 +84,6 @@ def delete_outliers(df):
 def get_k_medias(X):
     kmeans = KMeans(n_clusters=3).fit(X)
     labels = kmeans.predict(X)
-    print()
     print(kmeans)
     print("\nCentroides:")
     print(kmeans.cluster_centers_)
@@ -134,6 +135,7 @@ def main():
     dendograma(X_o, "Dendograma sin outliers")
 
     # KMEANS
+    print("\n----- K-MEANS -----")
     kmeans, labels = get_k_medias(X_o)
     # Comparamos la distribución de las clases respecto a la primera columna.
     plot_cluster_primera_variable(X_o, kmeans, labels)
@@ -141,6 +143,7 @@ def main():
     print("\nLa puntuación de silhouette es: {}".format(silhouette_avg3))
 
     # PREPROCESANDO (StandardScaler + PCA)
+    print("\n----- PREPROCESANDO (StandardScaler + PCA) -----")
     X_std = StandardScaler().fit_transform(X_o)
     X_pca = PCA(n_components=8).fit_transform(X_std)
     X_pca = pd.DataFrame(X_pca)
@@ -152,6 +155,25 @@ def main():
     plot_cluster_primera_variable(X_pca, kmeans_pca, labels_pca)
     silhouette_pca = silhouette_score(X_pca, (kmeans.labels_), metric='euclidean')
     print("\nLa puntuación de silhouette es: {}".format(silhouette_pca))
+
+    # DBSCAN
+    print("\n----- DBSCAN -----")
+    db = DBSCAN(eps=2, min_samples=3).fit(X_pca)
+    print(db)
+    labs = np.array(db.labels_)
+    # Hacemos la asignación de labels para comparar con la primera columna:
+    # 2->3 1->4 0->1 -1->2
+    for i in range(len(labs)):
+        if labs[i]==0: labs[i]=1
+        elif labs[i]==2: labs[i]=3
+        elif labs[i]==-1: labs[i]=2
+        elif labs[i]==1: labs[i]=4
+    print("Etiquetas predichas por DBSCAN:")
+    print(labs)
+    print("\nEtiquetas reales:")
+    print(np.array(y_o))
+    print("\nMatriz de confusión:")
+    print(confusion_matrix(y_o, labs))
 
 
 if __name__ == "__main__":
