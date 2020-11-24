@@ -122,33 +122,36 @@ def main():
     print("\nVariable a predecir ('Type'):")
     print(df.groupby(['Type']).size())
 
+    # CLUSTERING JERÁRQUICO
     print("\n----- Tratando los datos normales -----")
     X, y =split_data(df)
     dendograma(X)
 
+    # BORRANDO OUTLIERS
     print("\n----- Tratando los datos que no tienen outliers -----")
     df_o = delete_outliers(df)
     X_o, y_o =split_data(df_o)
     dendograma(X_o, "Dendograma sin outliers")
 
+    # KMEANS
     kmeans, labels = get_k_medias(X_o)
     # Comparamos la distribución de las clases respecto a la primera columna.
     plot_cluster_primera_variable(X_o, kmeans, labels)
     silhouette_avg3 = silhouette_score(X_o, (kmeans.labels_), metric='euclidean')
     print("\nLa puntuación de silhouette es: {}".format(silhouette_avg3))
 
+    # PREPROCESANDO (StandardScaler + PCA)
     X_std = StandardScaler().fit_transform(X_o)
-    print(X_std)
-
     X_pca = PCA(n_components=8).fit_transform(X_std)
     X_pca = pd.DataFrame(X_pca)
     if(IMPRIME_INFO):
+        print("Conjunto de datos después del preprocesamiento:")
         print(X_pca)
     kmeans_pca, labels_pca = get_k_medias(X_pca)
     # Comparamos la distribución de las clases respecto a la primera columna.
-    #plot_cluster_primera_variable(X_pca, kmeans_pca, labels_pca)
-    #silhouette_pca = silhouette_score(X_pca, (kmeans.labels_), metric='euclidean')
-    #print("\nLa puntuación de silhouette es: {}".format(silhouette_pca))
+    plot_cluster_primera_variable(X_pca, kmeans_pca, labels_pca)
+    silhouette_pca = silhouette_score(X_pca, (kmeans.labels_), metric='euclidean')
+    print("\nLa puntuación de silhouette es: {}".format(silhouette_pca))
 
 
 if __name__ == "__main__":
