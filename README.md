@@ -13,7 +13,7 @@ Las prácticas de esta asignatura son las siguientes:
     - Consultar [datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Preprocesamiento/accidentes.xls) y [subconjunto de los datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Preprocesamiento/accidentes_mini.xls).
 
 - [Agrupamiento](https://github.com/Carlossamu7/TID_MUII_UGR/milestone/2). Base de datos: `wine.dat`.
-    - Consultar código.
+    - Consultar [código](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Agrupamiento/agrupamiento.py).
     - Consultar [datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Agrupamiento/wine.data) y su [descripción](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Agrupamiento/wine_names.txt).
 
 ## Licencia
