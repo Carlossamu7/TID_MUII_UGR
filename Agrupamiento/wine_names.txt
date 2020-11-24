@@ -76,7 +76,7 @@ ftp://ftp.ics.uci.edu/pub/machine-learning-databases/wine
 
 5. Number of Instances
 
-      	class 1 59
+    class 1 59
 	class 2 71
 	class 3 48
 
@@ -100,6 +100,6 @@ ftp://ftp.ics.uci.edu/pub/machine-learning-databases/wine
 
 9. Class Distribution: number of instances per class
 
-      	class 1 59
+    class 1 59
 	class 2 71
 	class 3 48
