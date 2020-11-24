@@ -184,6 +184,7 @@ def main():
     print(np.array(y_o))
     print("\nMatriz de confusión:")
     print(confusion_matrix(y_o, labs))
+    print("NOTA: se observan algunos outliers (cuarta clase)")
 
 
 if __name__ == "__main__":
