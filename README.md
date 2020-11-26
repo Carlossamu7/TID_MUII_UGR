@@ -11,10 +11,17 @@ Las prácticas de esta asignatura son las siguientes:
 - [Preprocesamiento](https://github.com/Carlossamu7/TID_MUII_UGR/milestone/1). Base de datos: `accidentes.xls`.
     - Consultar [código](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Preprocesamiento/preprocesamiento.py).
     - Consultar [datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Preprocesamiento/accidentes.xls) y [subconjunto de los datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Preprocesamiento/accidentes_mini.xls).
+    - Consultar memoria de la práctica.
 
 - [Agrupamiento](https://github.com/Carlossamu7/TID_MUII_UGR/milestone/2). Base de datos: `wine.dat`.
     - Consultar [código](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Agrupamiento/agrupamiento.py).
     - Consultar [datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Agrupamiento/wine.data) y su [descripción](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Agrupamiento/wine_names.txt).
+    - Consultar memoria de la práctica.
+
+- [Clasificación](https://github.com/Carlossamu7/TID_MUII_UGR/milestone/3). Base de datos: `eBayAuctions.xls`.
+    - Consultar codigo.
+    - Consultar [datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Clasificaci%C3%B3n/eBayAuctions.xls).
+    - Consultar memoria de la práctica.
 
 ## Licencia
 
