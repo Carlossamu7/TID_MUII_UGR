@@ -19,7 +19,7 @@ Las prácticas de esta asignatura son las siguientes:
     - Consultar memoria de la práctica.
 
 - [Clasificación](https://github.com/Carlossamu7/TID_MUII_UGR/milestone/3). Base de datos: `eBayAuctions.xls`.
-    - Consultar codigo.
+    - Consultar [código](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Clasificaci%C3%B3n/clasificacion.py).
     - Consultar [datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Clasificaci%C3%B3n/eBayAuctions.xls).
     - Consultar memoria de la práctica.
 
