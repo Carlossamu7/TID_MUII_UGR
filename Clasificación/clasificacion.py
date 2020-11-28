@@ -23,8 +23,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 from sklearn.tree import DecisionTreeClassifier
-
 from sklearn import svm
+from sklearn.linear_model import LogisticRegression
 
 IMPRIME_INFO = True     # Indica si imprimir información
 
@@ -184,13 +184,30 @@ def decision_tree(X_train, X_test, y_train, y_test):
 - y_test: etiquetas de test.
 """
 def SVC(X_train, X_test, y_train, y_test):
+    print("\n------ SVC ------")
     svc = svm.SVC(kernel='linear')
-    print("Entrenando el árbol de decisión")
+    print("Entrenando SVC")
     svc.fit(X_train, y_train)
     print('Accuracy de SVM en el conjunto de entrenamiento: {:.2f}'.format(svc.score(X_train, y_train)))
     print('Accuracy de SVM en el conjunto de test: {:.2f}'.format(svc.score(X_test, y_test)))
     print("Prediciendo etiquetas")
     return svc.predict(X_test)
+
+""" Entrenando con LogisticRegression.
+- X_train: datos de entrenamiento.
+- X_test: datos de test.
+- y_train: etiquetas del entrenamiento.
+- y_test: etiquetas de test.
+"""
+def LR(X_train, X_test, y_train, y_test):
+    print("\n------ LogisticRegression ------")
+    lr = LogisticRegression()
+    print("Entrenando regresión logística")
+    lr.fit(X_train, y_train)
+    print('Accuracy de LogisticRegression en el conjunto de entrenamiento: {:.2f}'.format(lr.score(X_train, y_train)))
+    print('Accuracy de LogisticRegression en el conjunto de test: {:.2f}'.format(lr.score(X_test, y_test)))
+    print("Prediciendo etiquetas")
+    return lr.predict(X_test)
 
 """ Muestra matriz de confusión y un reportaje de clasificación.
 - y_test: etiquetas reales.
@@ -230,8 +247,10 @@ def main():
     print_plot_sol(y_test, y_pred_knn)
     y_pred_tree = decision_tree(X_train, X_test, y_train, y_test)
     print_plot_sol(y_test, y_pred_tree)
-    y_pred_svc = SVC(X_train, X_test, y_train, y_test)
-    print_plot_sol(y_test, y_pred_svc)
+    #y_pred_svc = SVC(X_train, X_test, y_train, y_test)
+    #print_plot_sol(y_test, y_pred_svc)
+    y_pred_lr = LR(X_train, X_test, y_train, y_test)
+    print_plot_sol(y_test, y_pred_lr)
 
 
 if __name__ == "__main__":
