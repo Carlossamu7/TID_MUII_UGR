@@ -22,6 +22,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
+from sklearn.tree import DecisionTreeClassifier
 
 IMPRIME_INFO = True     # Indica si imprimir información
 
@@ -47,7 +48,7 @@ def read_data():
 def split_data(df):
     return df.drop(columns="Competitive?", axis=1), df["Competitive?"]
 
-""" Entrenando con k vecinos más cercanos
+""" Entrenando con k vecinos más cercanos.
 - X_train: datos de entrenamiento.
 - X_test: datos de test.
 - y_train: etiquetas del entrenamiento.
@@ -55,10 +56,27 @@ def split_data(df):
 """
 def knn(X_train, X_test, y_train, y_test):
     knn = KNeighborsClassifier(5)
+    print("Entrenando knn")
     knn.fit(X_train, y_train)
     print('Accuracy de K-NN en el conjunto de entrenamiento: {:.2f}'.format(knn.score(X_train, y_train)))
     print('Accuracy de K-NN en el conjunto de test: {:.2f}'.format(knn.score(X_test, y_test)))
+    print("Prediciendo etiquetas")
     return knn.predict(X_test)
+
+""" Entrenando con k vecinos más cercanos
+- X_train: datos de entrenamiento.
+- X_test: datos de test.
+- y_train: etiquetas del entrenamiento.
+- y_test: etiquetas de test.
+"""
+def decision_tree(X_train, X_test, y_train, y_test):
+    tree = DecisionTreeClassifier(max_depth=10)
+    print("Entrenando el árbol de decisión")
+    tree = tree.fit(X_train, y_train)
+    print('Accuracy de K-NN en el conjunto de entrenamiento: {:.2f}'.format(knn.score(X_train, y_train)))
+    print('Accuracy de K-NN en el conjunto de test: {:.2f}'.format(knn.score(X_test, y_test)))
+    print("Prediciendo etiquetas")
+    return tree.predict(X_test)
 
 """ Muestra matriz de confusión.
 - y_real: etiquetas reales.
@@ -114,8 +132,11 @@ def main():
     plt.show()
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-    y_pred_knn = knn(X_train, X_test, y_train, y_test)
-    print_plot_sol(y_test, y_pred_knn)
+
+    #y_pred_knn = knn(X_train, X_test, y_train, y_test)
+    #print_plot_sol(y_test, y_pred_knn)
+    #y_pred_tree = decision_tree(X_train, X_test, y_train, y_test)
+    #print_plot_sol(y_test, y_pred_tree)
 
 
 if __name__ == "__main__":
