@@ -24,6 +24,8 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 from sklearn.tree import DecisionTreeClassifier
 
+from sklearn import svm
+
 IMPRIME_INFO = True     # Indica si imprimir información
 
 #############################
@@ -159,7 +161,7 @@ def knn(X_train, X_test, y_train, y_test):
     print("Prediciendo etiquetas")
     return knn.predict(X_test)
 
-""" Entrenando con k vecinos más cercanos
+""" Entrenando con árbol de decisión.
 - X_train: datos de entrenamiento.
 - X_test: datos de test.
 - y_train: etiquetas del entrenamiento.
@@ -174,6 +176,21 @@ def decision_tree(X_train, X_test, y_train, y_test):
     print('Accuracy de DecisionTreeClassifier en el conjunto de test: {:.2f}'.format(tree.score(X_test, y_test)))
     print("Prediciendo etiquetas")
     return tree.predict(X_test)
+
+""" Entrenando con SVC.
+- X_train: datos de entrenamiento.
+- X_test: datos de test.
+- y_train: etiquetas del entrenamiento.
+- y_test: etiquetas de test.
+"""
+def SVC(X_train, X_test, y_train, y_test):
+    svc = svm.SVC(kernel='linear')
+    print("Entrenando el árbol de decisión")
+    svc.fit(X_train, y_train)
+    print('Accuracy de SVM en el conjunto de entrenamiento: {:.2f}'.format(svc.score(X_train, y_train)))
+    print('Accuracy de SVM en el conjunto de test: {:.2f}'.format(svc.score(X_test, y_test)))
+    print("Prediciendo etiquetas")
+    return svc.predict(X_test)
 
 """ Muestra matriz de confusión y un reportaje de clasificación.
 - y_test: etiquetas reales.
@@ -213,6 +230,8 @@ def main():
     print_plot_sol(y_test, y_pred_knn)
     y_pred_tree = decision_tree(X_train, X_test, y_train, y_test)
     print_plot_sol(y_test, y_pred_tree)
+    y_pred_svc = SVC(X_train, X_test, y_train, y_test)
+    print_plot_sol(y_test, y_pred_svc)
 
 
 if __name__ == "__main__":
