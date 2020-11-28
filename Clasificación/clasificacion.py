@@ -16,6 +16,7 @@ P3- CLASIFICACION
 
 import pandas as pd
 import numpy as np
+from matplotlib import pyplot as plt
 
 IMPRIME_INFO = True     # Indica si imprimir información
 
@@ -35,6 +36,11 @@ def read_data():
         print(df)
     return df
 
+""" Divide los datos quitando la etiqueta a predecir. Devuelve X e y.
+- df: dataframe.
+"""
+def split_data(df):
+    return df.drop(columns="Competitive?", axis=1), df["Competitive?"]
 
 ########################
 #####     MAIN     #####
@@ -45,6 +51,8 @@ def main():
     print("Leyendo el conjunto de datos")
     df = read_data()
 
+    X, y = split_data(df)
+    
 
 if __name__ == "__main__":
 	main()
