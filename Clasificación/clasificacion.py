@@ -27,6 +27,8 @@ from sklearn import svm
 from sklearn.linear_model import LogisticRegression
 
 from sklearn.metrics import roc_curve, roc_auc_score
+from sklearn.model_selection import cross_val_score
+import statistics as stats
 
 IMPRIME_INFO = True     # Indica si imprimir información
 
@@ -160,6 +162,10 @@ def knn(X_train, X_test, y_train, y_test):
     knn.fit(X_train, y_train)
     print('Accuracy de K-NN en el conjunto de entrenamiento: {:.2f}'.format(knn.score(X_train, y_train)))
     print('Accuracy de K-NN en el conjunto de test: {:.2f}'.format(knn.score(X_test, y_test)))
+    print("Accuracys de la cross-validation (5 particiones)")
+    score = cross_val_score(knn, X_train.append(X_test), y_train.append(y_test), cv=5)
+    print(score)
+    print("Accuracy medio de la cross-validation: {:.4f}".format(stats.mean(score)))
     print("Prediciendo etiquetas")
     return knn.predict(X_test), knn.predict_proba(X_test)
 
@@ -176,6 +182,10 @@ def decision_tree(X_train, X_test, y_train, y_test):
     tree = tree.fit(X_train, y_train)
     print('Accuracy de DecisionTreeClassifier en el conjunto de entrenamiento: {:.2f}'.format(tree.score(X_train, y_train)))
     print('Accuracy de DecisionTreeClassifier en el conjunto de test: {:.2f}'.format(tree.score(X_test, y_test)))
+    print("Accuracys de la cross-validation (5 particiones)")
+    score = cross_val_score(tree, X_train.append(X_test), y_train.append(y_test), cv=5)
+    print(score)
+    print("Accuracy medio de la cross-validation: {:.4f}".format(stats.mean(score)))
     print("Prediciendo etiquetas")
     return tree.predict(X_test), tree.predict_proba(X_test)
 
@@ -187,11 +197,15 @@ def decision_tree(X_train, X_test, y_train, y_test):
 """
 def SVC(X_train, X_test, y_train, y_test):
     print("\n------ SVC ------")
-    svc = svm.SVC(kernel='linear', probability=True, max_iter=1000000)
+    svc = svm.SVC(kernel='linear', probability=True, max_iter=500000)
     print("Entrenando SVC")
     svc.fit(X_train, y_train)
     print('Accuracy de SVM en el conjunto de entrenamiento: {:.2f}'.format(svc.score(X_train, y_train)))
     print('Accuracy de SVM en el conjunto de test: {:.2f}'.format(svc.score(X_test, y_test)))
+    print("Accuracys de la cross-validation (5 particiones)")
+    score = cross_val_score(svc, X_train.append(X_test), y_train.append(y_test), cv=5)
+    print(score)
+    print("Accuracy medio de la cross-validation: {:.4f}".format(stats.mean(score)))
     print("Prediciendo etiquetas")
     return svc.predict(X_test), svc.predict_proba(X_test)
 
@@ -208,6 +222,10 @@ def LR(X_train, X_test, y_train, y_test):
     lr.fit(X_train, y_train)
     print('Accuracy de LogisticRegression en el conjunto de entrenamiento: {:.2f}'.format(lr.score(X_train, y_train)))
     print('Accuracy de LogisticRegression en el conjunto de test: {:.2f}'.format(lr.score(X_test, y_test)))
+    print("Accuracys de la cross-validation (5 particiones)")
+    score = cross_val_score(lr, X_train.append(X_test), y_train.append(y_test), cv=5)
+    print(score)
+    print("Accuracy medio de la cross-validation: {:.4f}".format(stats.mean(score)))
     print("Prediciendo etiquetas")
     return lr.predict(X_test), lr.predict_proba(X_test)
 
