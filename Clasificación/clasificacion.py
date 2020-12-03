@@ -26,6 +26,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn import svm
 from sklearn.linear_model import LogisticRegression
 
+from sklearn.metrics import roc_curve, roc_auc_score
+
 IMPRIME_INFO = True     # Indica si imprimir información
 
 #############################
@@ -154,12 +156,12 @@ def to_int_categorical(df):
 def knn(X_train, X_test, y_train, y_test):
     print("\n------ KNN ------")
     knn = KNeighborsClassifier(5)
-    print("Entrenando knn")
+    print("Entrenando KNN")
     knn.fit(X_train, y_train)
     print('Accuracy de K-NN en el conjunto de entrenamiento: {:.2f}'.format(knn.score(X_train, y_train)))
     print('Accuracy de K-NN en el conjunto de test: {:.2f}'.format(knn.score(X_test, y_test)))
     print("Prediciendo etiquetas")
-    return knn.predict(X_test)
+    return knn.predict(X_test), knn.predict_proba(X_test)
 
 """ Entrenando con árbol de decisión.
 - X_train: datos de entrenamiento.
@@ -175,7 +177,7 @@ def decision_tree(X_train, X_test, y_train, y_test):
     print('Accuracy de DecisionTreeClassifier en el conjunto de entrenamiento: {:.2f}'.format(tree.score(X_train, y_train)))
     print('Accuracy de DecisionTreeClassifier en el conjunto de test: {:.2f}'.format(tree.score(X_test, y_test)))
     print("Prediciendo etiquetas")
-    return tree.predict(X_test)
+    return tree.predict(X_test), tree.predict_proba(X_test)
 
 """ Entrenando con SVC.
 - X_train: datos de entrenamiento.
@@ -185,13 +187,13 @@ def decision_tree(X_train, X_test, y_train, y_test):
 """
 def SVC(X_train, X_test, y_train, y_test):
     print("\n------ SVC ------")
-    svc = svm.SVC(kernel='linear')
+    svc = svm.SVC(kernel='linear', probability=True, max_iter=1000000)
     print("Entrenando SVC")
     svc.fit(X_train, y_train)
     print('Accuracy de SVM en el conjunto de entrenamiento: {:.2f}'.format(svc.score(X_train, y_train)))
     print('Accuracy de SVM en el conjunto de test: {:.2f}'.format(svc.score(X_test, y_test)))
     print("Prediciendo etiquetas")
-    return svc.predict(X_test)
+    return svc.predict(X_test), svc.predict_proba(X_test)
 
 """ Entrenando con LogisticRegression.
 - X_train: datos de entrenamiento.
@@ -207,7 +209,7 @@ def LR(X_train, X_test, y_train, y_test):
     print('Accuracy de LogisticRegression en el conjunto de entrenamiento: {:.2f}'.format(lr.score(X_train, y_train)))
     print('Accuracy de LogisticRegression en el conjunto de test: {:.2f}'.format(lr.score(X_test, y_test)))
     print("Prediciendo etiquetas")
-    return lr.predict(X_test)
+    return lr.predict(X_test), lr.predict_proba(X_test)
 
 """ Muestra matriz de confusión y un reportaje de clasificación.
 - y_test: etiquetas reales.
@@ -217,6 +219,44 @@ def print_plot_sol(y_test, y_pred):
     print("Matriz de confusión:")
     print(confusion_matrix(y_test, y_pred))
     print(classification_report(y_test, y_pred))
+
+def plot_roc_curve(y_test, probs_knn, probs_tree, probs_svc, probs_lr):
+    # keep probabilities for the positive outcome only
+    probs_knn = probs_knn[:, 1]
+    probs_tree = probs_tree[:, 1]
+    probs_svc = probs_svc[:, 1]
+    probs_lr = probs_lr[:, 1]
+
+    # Calculamos scores
+    auc_knn = roc_auc_score(y_test, probs_knn)
+    auc_tree = roc_auc_score(y_test, probs_tree)
+    auc_svc = roc_auc_score(y_test, probs_svc)
+    auc_lr = roc_auc_score(y_test, probs_lr)
+
+    # Los imprimimos scores
+    print("KNN: ROC AUC={:.3f}".format(auc_knn))
+    print("Tree: ROC AUC={:.3f}".format(auc_tree))
+    print("SVC: ROC AUC={:.3f}".format(auc_svc))
+    print("Logistic: ROC AUC={:.3f}".format(auc_lr))
+
+    # Calculamos las curvas ROC
+    fpr_knn, tpr_knn, _ = roc_curve(y_test, probs_knn)
+    fpr_tree, tpr_tree, _ = roc_curve(y_test, probs_tree)
+    fpr_svc, tpr_svc, _ = roc_curve(y_test, probs_svc)
+    fpr_lr, tpr_lr, _ = roc_curve(y_test, probs_lr)
+
+    # Dibujamos las curvas
+    plt.plot(fpr_knn, tpr_knn, linestyle='--', label='KNN')
+    plt.plot(fpr_tree, tpr_tree, linestyle=':', label='Tree')
+    plt.plot(fpr_svc, tpr_svc, linestyle='-.', label='SVC')
+    plt.plot(fpr_lr, tpr_lr, marker='.', label='Logistic')
+    # Etiqueta los ejes
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.legend()
+    plt.title("Curva ROC")
+    plt.gcf().canvas.set_window_title("Práctica 3 - clasificación")
+    plt.show()
 
 ########################
 #####     MAIN     #####
@@ -243,15 +283,17 @@ def main():
     # Dividiendo datos en train y test
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
-    y_pred_knn = knn(X_train, X_test, y_train, y_test)
+    y_pred_knn, probs_knn = knn(X_train, X_test, y_train, y_test)
     print_plot_sol(y_test, y_pred_knn)
-    y_pred_tree = decision_tree(X_train, X_test, y_train, y_test)
+    y_pred_tree, probs_tree = decision_tree(X_train, X_test, y_train, y_test)
     print_plot_sol(y_test, y_pred_tree)
-    #y_pred_svc = SVC(X_train, X_test, y_train, y_test)
-    #print_plot_sol(y_test, y_pred_svc)
-    y_pred_lr = LR(X_train, X_test, y_train, y_test)
+    y_pred_svc, probs_svc = SVC(X_train, X_test, y_train, y_test)
+    print_plot_sol(y_test, y_pred_svc)
+    y_pred_lr, probs_lr = LR(X_train, X_test, y_train, y_test)
     print_plot_sol(y_test, y_pred_lr)
 
+    # Imprimimos las curvas ROC
+    plot_roc_curve(y_test, probs_knn, probs_tree, probs_svc, probs_lr)
 
 if __name__ == "__main__":
 	main()
