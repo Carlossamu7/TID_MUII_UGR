@@ -24,8 +24,8 @@ Las prácticas de esta asignatura son las siguientes:
     - Consultar memoria de la práctica.
 
 - [Reglas de Asociación](https://github.com/Carlossamu7/TID_MUII_UGR/milestone/4). Base de datos: `prestamo.xls`.
-    - Consultar [código](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Reglas%20de%20Asociaci%C3%B3n/reglas_asociacion.py).
-    - Consultar [datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Reglas%20de%20Asociaci%C3%B3n/prestamo.xls).
+    - Consultar [código](https://github.com/Carlossamu7/TID_MUII_UGR/tree/main/ReglasAsociacion/reglas_asociacion.py).
+    - Consultar [datos](https://github.com/Carlossamu7/TID_MUII_UGR/tree/main/ReglasAsociacion/prestamo.xls).
     - Consultar memoria de la práctica.
 
 ## Licencia
