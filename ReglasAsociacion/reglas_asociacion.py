@@ -43,24 +43,47 @@ def read_data():
 """
 def nominalize_0_1(df, atribute):
     for i in range(len(df[atribute])):
-        # 0 es que no tiene tarjeta de crédito
+        # 0 es que no posee el atributo
         if(df[atribute][i]=="0"):
             df[atribute][i] = "no" + atribute.replace(" ", "")
-        # 1 es que tiene tarjeta de crédito
+        # 1 es que sí que posee ese atributo
         else:
             df[atribute][i] = "has" + atribute.replace(" ", "")
     return df
 
+""" Discretizando el atributo 'Education'.
+- df: dataframe.
+"""
 def discretize_education(df):
     for i in range(len(df["Education"])):
-        # 0 es que no tiene tarjeta de crédito
+        # 1 es Undergraduate
         if(df["Education"][i]=="1"):
             df["Education"][i] = "Undergraduate"
-        # 1 es que tiene tarjeta de crédito
+        # 2 es Graduate
         elif(df["Education"][i]=="2"):
             df["Education"][i] = "Graduated"
+        # 3 es Advanced/Professional
         else:
             df["Education"][i] = "Advanced/Professional"
+    return df
+
+""" Discretizando el atributo 'Family'.
+- df: dataframe.
+"""
+def discretize_family(df):
+    for i in range(len(df["Family"])):
+        # 1 componente
+        if(df["Family"][i]=="1"):
+            df["Family"][i] = "1Component"
+        # 2 componentes
+        elif(df["Family"][i]=="2"):
+            df["Family"][i] = "2Component"
+        # 3 componentes
+        elif(df["Family"][i]=="3"):
+            df["Family"][i] = "3Component"
+        # 4 componentes
+        else:
+            df["Family"][i] = "4Component"
     return df
 
 def inspect(results):
@@ -93,6 +116,7 @@ def main():
     df = nominalize_0_1(df, "Online")
     df = nominalize_0_1(df, "CreditCard")
     df = discretize_education(df)
+    df = discretize_family(df)
     print(df)
 
     for x in df.columns:
