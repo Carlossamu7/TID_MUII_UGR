@@ -86,6 +86,28 @@ def discretize_family(df):
             df["Family"][i] = "4Component"
     return df
 
+""" Discretizando el atributo 'Age'.
+- df: dataframe.
+"""
+def discretize_age(df):
+    for i in range(len(df["Age"])):
+        # Twenties
+        if(int(df["Age"][i])>=20 and int(df["Age"][i])<30):
+            df["Age"][i] = "Twenties"
+        # Thirties
+        elif(int(df["Age"][i])>=30 and int(df["Age"][i])<40):
+            df["Age"][i] = "Thirties"
+        # Forties
+        elif(int(df["Age"][i])>=40 and int(df["Age"][i])<50):
+            df["Age"][i] = "Forties"
+        # Fifties
+        elif(int(df["Age"][i])>=50 and int(df["Age"][i])<60):
+            df["Age"][i] = "Fifties"
+        # Sixties
+        else:
+            df["Age"][i] = "Sixties"
+    return df
+
 def inspect(results):
     rh          = [tuple(result[2][0][0]) for result in results]
     lh          = [tuple(result[2][0][1]) for result in results]
@@ -117,6 +139,7 @@ def main():
     df = nominalize_0_1(df, "CreditCard")
     df = discretize_education(df)
     df = discretize_family(df)
+    df = discretize_age(df)
     print(df)
 
     for x in df.columns:
