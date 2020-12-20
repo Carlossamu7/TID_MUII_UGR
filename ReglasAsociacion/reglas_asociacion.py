@@ -133,6 +133,25 @@ def discretize_mortgage(df):
             df["Mortgage"][i] = "VeryHighMortgage"
     return df
 
+""" Discretizando el atributo 'Mortgage'. Devuelve el df.
+- df: dataframe.
+"""
+def discretize_CCAvg(df):
+    for i in range(len(df["CCAvg"])):
+        # NoMortgage
+        if(float(df["CCAvg"][i])>=0 and float(df["CCAvg"][i])<0.75):
+            df["CCAvg"][i] = "VeyLowCCAvg"
+        # VeryLowMortgage
+        elif(float(df["CCAvg"][i])>=0.75 and float(df["CCAvg"][i])<1.5):
+            df["CCAvg"][i] = "LowCCAvg"
+        # LowMortgage
+        elif(float(df["CCAvg"][i])>=1.5 and float(df["CCAvg"][i])<2.5):
+            df["CCAvg"][i] = "HighCCAvg"
+        # VeryHighMortgage
+        else:
+            df["CCAvg"][i] = "VeryHighCCAvg"
+    return df
+
 """ Todo el preprocesado. Devuelve el df preprocesado.
 - df: dataframe.
 """
@@ -163,6 +182,8 @@ def preprocesamiento(df):
     df = discretize_age(df)
     print("Discretizando 'Mortgage'")
     df = discretize_mortgage(df)
+    print("Discretizando 'CCAvg'")
+    df = discretize_CCAvg(df)
     print()
     print(df)
     return df
@@ -183,7 +204,7 @@ def inspect(results):
 def main():
     print("Leyendo el conjunto de datos")
     df = read_data()
-    print(df["Mortgage"].describe())
+    print(df["CCAvg"].describe())
 
     df = preprocesamiento(df)
 
