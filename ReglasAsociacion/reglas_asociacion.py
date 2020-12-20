@@ -37,6 +37,10 @@ def read_data():
         print(df)
     return df
 
+####################################
+#####     Preprocesamiento     #####
+####################################
+
 """ Haciendo nominal la variable 'atribute' que contiene 0 y 1. Devuelve el df.
 - df: dataframe.
 - atribute: nombre del atributo.
