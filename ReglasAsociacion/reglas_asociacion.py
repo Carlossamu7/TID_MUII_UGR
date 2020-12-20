@@ -51,7 +51,7 @@ def nominalize_0_1(df, atribute):
             df[atribute][i] = "has" + atribute.replace(" ", "")
     return df
 
-""" Discretizando el atributo 'Education'.
+""" Discretizando el atributo 'Education'. Devuelve el df.
 - df: dataframe.
 """
 def discretize_education(df):
@@ -67,7 +67,7 @@ def discretize_education(df):
             df["Education"][i] = "Advanced/Professional"
     return df
 
-""" Discretizando el atributo 'Family'.
+""" Discretizando el atributo 'Family'. Devuelve el df.
 - df: dataframe.
 """
 def discretize_family(df):
@@ -86,7 +86,7 @@ def discretize_family(df):
             df["Family"][i] = "4Component"
     return df
 
-""" Discretizando el atributo 'Age'.
+""" Discretizando el atributo 'Age'. Devuelve el df.
 - df: dataframe.
 """
 def discretize_age(df):
@@ -108,7 +108,7 @@ def discretize_age(df):
             df["Age"][i] = "Sixties"
     return df
 
-""" Discretizando el atributo 'Mortgage'.
+""" Discretizando el atributo 'Mortgage'. Devuelve el df.
 - df: dataframe.
 """
 def discretize_mortgage(df):
@@ -133,6 +133,40 @@ def discretize_mortgage(df):
             df["Mortgage"][i] = "VeryHighMortgage"
     return df
 
+""" Todo el preprocesado. Devuelve el df preprocesado.
+- df: dataframe.
+"""
+def preprocesamiento(df):
+    correlaciones = df.corr()
+    df = df.astype(str)
+    print("\n---  PREPROCESAMIENTO  ---")
+    print("Descarto la variable 'Experience' ya que tiene una correlación de {}".format(correlaciones['Age'].sort_values(ascending=False)[1]))
+    df = df.drop(columns = ['Experience'])
+    df = df.drop(columns = ['ZIP Code'])
+    print("Nominalizando 'Personal Loan'")
+    df = nominalize_0_1(df, "Personal Loan")
+    print("Nominalizando 'Securities Account'")
+    df = nominalize_0_1(df, "Securities Account")
+    print("Nominalizando 'CD Account'")
+    df = nominalize_0_1(df, "CD Account")
+    print("Nominalizando 'CreditCard'")
+    df = nominalize_0_1(df, "CreditCard")
+    print("Nominalizando 'Online'")
+    df = nominalize_0_1(df, "Online")
+    print("Nominalizando 'CreditCard'")
+    df = nominalize_0_1(df, "CreditCard")
+    print("Discretizando 'Education'")
+    df = discretize_education(df)
+    print("Discretizando 'Family'")
+    df = discretize_family(df)
+    print("Discretizando 'Age'")
+    df = discretize_age(df)
+    print("Discretizando 'Mortgage'")
+    df = discretize_mortgage(df)
+    print()
+    print(df)
+    return df
+
 def inspect(results):
     rh          = [tuple(result[2][0][0]) for result in results]
     lh          = [tuple(result[2][0][1]) for result in results]
@@ -150,24 +184,8 @@ def main():
     print("Leyendo el conjunto de datos")
     df = read_data()
     print(df["Mortgage"].describe())
-    correlaciones = df.corr()
-    print(correlaciones)
-    print("\nDescarto la variable 'Experience' ya que:")
-    print(correlaciones['Age'].sort_values(ascending=False))
-    df = df.astype(str)
-    df = df.drop(columns = ['ZIP Code'])
-    df = df.drop(columns = ['Experience'])
-    df = nominalize_0_1(df, "Personal Loan")
-    df = nominalize_0_1(df, "Securities Account")
-    df = nominalize_0_1(df, "CD Account")
-    df = nominalize_0_1(df, "CreditCard")
-    df = nominalize_0_1(df, "Online")
-    df = nominalize_0_1(df, "CreditCard")
-    df = discretize_education(df)
-    df = discretize_family(df)
-    df = discretize_age(df)
-    df = discretize_mortgage(df)
-    print(df)
+
+    df = preprocesamiento(df)
 
     for x in df.columns:
         print(df.groupby([x]).size())
