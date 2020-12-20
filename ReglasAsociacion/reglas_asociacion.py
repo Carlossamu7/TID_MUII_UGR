@@ -138,18 +138,37 @@ def discretize_mortgage(df):
 """
 def discretize_CCAvg(df):
     for i in range(len(df["CCAvg"])):
-        # NoMortgage
+        # VeryLowCCAvg
         if(float(df["CCAvg"][i])>=0 and float(df["CCAvg"][i])<0.75):
             df["CCAvg"][i] = "VeyLowCCAvg"
-        # VeryLowMortgage
+        # LowCCAvg
         elif(float(df["CCAvg"][i])>=0.75 and float(df["CCAvg"][i])<1.5):
             df["CCAvg"][i] = "LowCCAvg"
-        # LowMortgage
+        # HighCCAvg
         elif(float(df["CCAvg"][i])>=1.5 and float(df["CCAvg"][i])<2.5):
             df["CCAvg"][i] = "HighCCAvg"
-        # VeryHighMortgage
+        # VeryHighCCAvg
         else:
             df["CCAvg"][i] = "VeryHighCCAvg"
+    return df
+
+""" Discretizando el atributo 'Mortgage'. Devuelve el df.
+- df: dataframe.
+"""
+def discretize_Income(df):
+    for i in range(len(df["Income"])):
+        # VerLowIncome
+        if(int(df["Income"][i])>=0 and int(df["Income"][i])<40):
+            df["Income"][i] = "VeryLowIncome"
+        # LowIncome
+        elif(int(df["Income"][i])>=40 and int(df["Income"][i])<65):
+                df["Income"][i] = "LowIncome"
+        # HighIncome
+        elif(int(df["Income"][i])>=65 and int(df["Income"][i])<100):
+                df["Income"][i] = "HighIncome"
+        # VeryHighIncome
+        else:
+            df["Income"][i] = "VeryHighIncome"
     return df
 
 """ Todo el preprocesado. Devuelve el df preprocesado.
@@ -184,6 +203,8 @@ def preprocesamiento(df):
     df = discretize_mortgage(df)
     print("Discretizando 'CCAvg'")
     df = discretize_CCAvg(df)
+    print("Discretizando 'Income'")
+    df = discretize_Income(df)
     print()
     print(df)
     return df
@@ -204,7 +225,7 @@ def inspect(results):
 def main():
     print("Leyendo el conjunto de datos")
     df = read_data()
-    print(df["CCAvg"].describe())
+    print(df["Income"].describe())
 
     df = preprocesamiento(df)
 
