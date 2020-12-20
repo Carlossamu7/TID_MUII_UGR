@@ -51,6 +51,18 @@ def nominalize_0_1(df, atribute):
             df[atribute][i] = "has" + atribute.replace(" ", "")
     return df
 
+def discretize_education(df):
+    for i in range(len(df["Education"])):
+        # 0 es que no tiene tarjeta de crédito
+        if(df["Education"][i]=="1"):
+            df["Education"][i] = "Undergraduate"
+        # 1 es que tiene tarjeta de crédito
+        elif(df["Education"][i]=="2"):
+            df["Education"][i] = "Graduated"
+        else:
+            df["Education"][i] = "Advanced/Professional"
+    return df
+
 def inspect(results):
     rh          = [tuple(result[2][0][0]) for result in results]
     lh          = [tuple(result[2][0][1]) for result in results]
@@ -80,6 +92,7 @@ def main():
     df = nominalize_0_1(df, "CreditCard")
     df = nominalize_0_1(df, "Online")
     df = nominalize_0_1(df, "CreditCard")
+    df = discretize_education(df)
     print(df)
 
     for x in df.columns:
