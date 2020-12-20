@@ -108,6 +108,31 @@ def discretize_age(df):
             df["Age"][i] = "Sixties"
     return df
 
+""" Discretizando el atributo 'Mortgage'.
+- df: dataframe.
+"""
+def discretize_mortgage(df):
+    for i in range(len(df["Mortgage"])):
+        # NoMortgage
+        if(df["Mortgage"][i]=="0"):
+            df["Mortgage"][i] = "NoMortgage"
+        # VeryLowMortgage
+        elif(int(df["Mortgage"][i])>0 and int(df["Mortgage"][i])<=100):
+            df["Mortgage"][i] = "VeryLowMortgage"
+        # LowMortgage
+        elif(int(df["Mortgage"][i])>100 and int(df["Mortgage"][i])<=200):
+            df["Mortgage"][i] = "LowMortgage"
+        # MediumMortgage
+        elif(int(df["Mortgage"][i])>200 and int(df["Mortgage"][i])<=300):
+            df["Mortgage"][i] = "MediumMortgage"
+        # HighMortgage
+        elif(int(df["Mortgage"][i])>300 and int(df["Mortgage"][i])<=400):
+            df["Mortgage"][i] = "HighMortgage"
+        # VeryHighMortgage
+        else:
+            df["Mortgage"][i] = "VeryHighMortgage"
+    return df
+
 def inspect(results):
     rh          = [tuple(result[2][0][0]) for result in results]
     lh          = [tuple(result[2][0][1]) for result in results]
@@ -124,6 +149,7 @@ def inspect(results):
 def main():
     print("Leyendo el conjunto de datos")
     df = read_data()
+    print(df["Mortgage"].describe())
     correlaciones = df.corr()
     print(correlaciones)
     print("\nDescarto la variable 'Experience' ya que:")
@@ -140,6 +166,7 @@ def main():
     df = discretize_education(df)
     df = discretize_family(df)
     df = discretize_age(df)
+    df = discretize_mortgage(df)
     print(df)
 
     for x in df.columns:
