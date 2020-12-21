@@ -17,7 +17,8 @@ P4- REGLAS DE ASOCIACIÓN
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
-from apyori import apriori
+#from apyori import apriori
+from mlxtend.frequent_patterns import apriori
 
 IMPRIME_INFO = True     # Indica si imprimir información
 
@@ -195,8 +196,6 @@ def preprocesamiento(df):
     df = nominalize_0_1(df, "CreditCard")
     print("Nominalizando 'Online'")
     df = nominalize_0_1(df, "Online")
-    print("Nominalizando 'CreditCard'")
-    df = nominalize_0_1(df, "CreditCard")
     print("Discretizando 'Education'")
     df = discretize_education(df)
     print("Discretizando 'Family'")
@@ -237,19 +236,49 @@ def main():
         print(df.groupby([x]).size())
 
 
-    """
     records = []
     for i in range(df.shape[0]):
         records.append([str(df.values[i,j]) for j in range(df.shape[1])])
-    rules = apriori(records, min_support = 0.006, min_confidence = 0.2, min_lift = 3, min_length = 2)
+
+    """
+    rules = apriori(records, min_support = 0.06, min_confidence = 0.7, min_lift = 3, min_length = 2)
     print(rules)
     results = list(rules)
+    print(length(results))
     print(results[0])
     print(results[1])
     print(results[2])
+    print(results[3])
     #resultDataFrame=pd.DataFrame(inspect(results), columns=['rhs','lhs','support','confidence','lift'])
     #print(resultDataFrame)
     """
+
+    from mlxtend.preprocessing import TransactionEncoder
+    from mlxtend.frequent_patterns import fpgrowth
+    from mlxtend.frequent_patterns import association_rules
+
+    te = TransactionEncoder()
+    te_ary = te.fit(records).transform(records)
+    df = pd.DataFrame(te_ary, columns=te.columns_)
+
+    """
+    df = df.drop(columns = ['noPersonalLoan'])
+    df = df.drop(columns = ['noSecuritiesAccount'])
+    df = df.drop(columns = ['noCDAccount'])
+    df = df.drop(columns = ['noCreditCard'])
+    df = df.drop(columns = ['noOnline'])
+    """
+
+    print(df)
+    frequent_itemsets = fpgrowth(df, min_support=0.6, use_colnames=True)
+    #frequent_itemsets = apriori(df, min_support=0.6, use_colnames=True)
+    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
+    print(rules)
+
+    #rules = apriori(df, min_support = 0.06, use_colnames=True)
+    #print(rules)
+
+    rules.to_csv('Reglas.csv', header = True, index = False)
 
     """
     for item in association_rules:
