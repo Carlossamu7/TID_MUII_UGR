@@ -18,7 +18,10 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 #from apyori import apriori
+from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import apriori
+from mlxtend.frequent_patterns import fpgrowth
+from mlxtend.frequent_patterns import association_rules
 
 IMPRIME_INFO = True     # Indica si imprimir información
 
@@ -253,10 +256,6 @@ def main():
     #print(resultDataFrame)
     """
 
-    from mlxtend.preprocessing import TransactionEncoder
-    from mlxtend.frequent_patterns import fpgrowth
-    from mlxtend.frequent_patterns import association_rules
-
     te = TransactionEncoder()
     te_ary = te.fit(records).transform(records)
     df = pd.DataFrame(te_ary, columns=te.columns_)
@@ -275,29 +274,9 @@ def main():
     rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
     print(rules)
 
-    #rules = apriori(df, min_support = 0.06, use_colnames=True)
-    #print(rules)
-
+    # Guardo las reglas en un csv
     rules.to_csv('Reglas.csv', header = True, index = False)
 
-    """
-    for item in association_rules:
-        # first index of the inner list
-        # Contains base item and add item
-        pair = item[0]
-        items = [x for x in pair]
-        print("Rule: " + items[0] + " -> " + items[1])
-
-        #second index of the inner list
-        print("Support: " + str(item[1]))
-
-        #third index of the list located at 0th
-        #of the third index of the inner list
-
-        print("Confidence: " + str(item[2][0][2]))
-        print("Lift: " + str(item[2][0][3]))
-        print("=====================================")
-    """
 
 if __name__ == "__main__":
 	main()
