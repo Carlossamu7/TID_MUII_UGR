@@ -276,6 +276,7 @@ def main():
 
     # Guardo las reglas en un csv
     rules.to_csv('Reglas.csv', header = True, index = False)
+    # Revisar esto
 
 
 if __name__ == "__main__":
