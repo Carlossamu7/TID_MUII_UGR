@@ -177,8 +177,9 @@ def discretize(df, df_I):
 """
 def imput_mean(df):
     atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND',
-                   'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
-    unknown_val = [9, 99, 99, 9, 99, 9, 9, 9, 99, 99, 9, 9, 9998, 9999, 9]
+                   'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'ALCOHOL']
+    unknown_val = [9, 99, 99, 9, 99, 9, 9, 9, 99, 99, 9, 9, 9999, 9]
+    df['PED_ACC'] = df[atr_imputed[i]].replace(to_replace = 9998, value = 9999)
     for i in range(len(atr_imputed)):
         df[atr_imputed[i]] = df[atr_imputed[i]].replace(to_replace = unknown_val[i], value = None)
         mean = int(df[atr_imputed[i]].mean())
@@ -192,8 +193,9 @@ def imput_mean(df):
 """
 def imput_mode(df):
     atr_imputed = ['WEEKDAY', 'HOUR', 'MAN_COL', 'INT_HWY', 'REL_JCT', 'ALIGN', 'PROFILE', 'SUR_COND',
-                   'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
-    unknown_val = [9, 99, 99, 9, 99, 9, 9, 9, 99, 99, 9, 9, 9998, 9999, 9]
+                   'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'ALCOHOL']
+    unknown_val = [9, 99, 99, 9, 99, 9, 9, 9, 99, 99, 9, 9, 9999, 9]
+    df['PED_ACC'] = df[atr_imputed[i]].replace(to_replace = 9998, value = 9999)
     for i in range(len(atr_imputed)):
         df[atr_imputed[i]] = df[atr_imputed[i]].replace(to_replace = unknown_val[i], value = None)
         mode = int(df[atr_imputed[i]].mode())
