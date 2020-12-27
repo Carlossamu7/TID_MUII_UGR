@@ -218,7 +218,7 @@ def delete_instances(df):
     if(IMPRIME_INFO):
         print("Número de instancias a eliminar: {}".format(len(to_delete)))
     df = df.drop(to_delete, axis=0)
-    df=df.reset_index()
+    df = df.reset_index()
     del df['index']
     return df
 
