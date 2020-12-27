@@ -24,6 +24,8 @@ from mlxtend.frequent_patterns import fpgrowth
 from mlxtend.frequent_patterns import association_rules
 
 IMPRIME_INFO = True     # Indica si imprimir información
+SUPP = 0.15             # Umbral de soporte
+CONF = 0.99             # Umbral de confidence
 
 #############################
 #####     FUNCIONES     #####
@@ -215,46 +217,15 @@ def preprocesamiento(df):
     print(df)
     return df
 
-def inspect(results):
-    rh          = [tuple(result[2][0][0]) for result in results]
-    lh          = [tuple(result[2][0][1]) for result in results]
-    supports    = [result[1] for result in results]
-    confidences = [result[2][0][2] for result in results]
-    lifts       = [result[2][0][3] for result in results]
-    return list(zip(rh, lh, supports, confidences, lifts))
+######################################
+#####    Reglas de asociación    #####
+######################################
 
-########################
-#####     MAIN     #####
-########################
-
-""" Programa principal. """
-def main():
-    print("Leyendo el conjunto de datos")
-    df = read_data()
-    print(df["Income"].describe())
-
-    df = preprocesamiento(df)
-
-    for x in df.columns:
-        print(df.groupby([x]).size())
-
-
+def get_rules(df):
+    print("\n---  REGLAS DE ASOCIACIÓN  ---")
     records = []
     for i in range(df.shape[0]):
         records.append([str(df.values[i,j]) for j in range(df.shape[1])])
-
-    """
-    rules = apriori(records, min_support = 0.06, min_confidence = 0.7, min_lift = 3, min_length = 2)
-    print(rules)
-    results = list(rules)
-    print(length(results))
-    print(results[0])
-    print(results[1])
-    print(results[2])
-    print(results[3])
-    #resultDataFrame=pd.DataFrame(inspect(results), columns=['rhs','lhs','support','confidence','lift'])
-    #print(resultDataFrame)
-    """
 
     te = TransactionEncoder()
     te_ary = te.fit(records).transform(records)
@@ -268,15 +239,51 @@ def main():
     df = df.drop(columns = ['noOnline'])
     """
 
+    print("\nDataframe preparado para extraer las reglas de asociación:")
     print(df)
-    frequent_itemsets = fpgrowth(df, min_support=0.6, use_colnames=True)
-    #frequent_itemsets = apriori(df, min_support=0.6, use_colnames=True)
-    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
-    print(rules)
+    #frequent_itemsets = fpgrowth(df, min_support=0.6, use_colnames=True)
+    frequent_itemsets = apriori(df, min_support=SUPP, use_colnames=True)
+    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=CONF)
+    rules = pd.DataFrame(rules)
 
+    to_delete = []
+    for i in range(rules.shape[0]):
+        if(len(rules["antecedents"][i])>3 or len(rules["consequents"][i])>3):
+            to_delete.append(i)
+
+    print("Índices de las reglas que tienen más de 3 antecedentes o consecuentes: ")
+    print(to_delete)
+    rules = rules.drop(to_delete, axis=0)
+    rules = rules.reset_index()
+    del rules['index']
+
+    return rules
+
+########################
+#####     MAIN     #####
+########################
+
+""" Programa principal. """
+def main():
+    print("Leyendo el conjunto de datos")
+    df = read_data()
+    print(df["Income"].describe())
+
+    # Preprocesamiento
+    df = preprocesamiento(df)
+
+    for x in df.columns:
+        print(df.groupby([x]).size())
+
+    # Extrayendo las reglas de asociación
+    rules = get_rules(df)
+
+    # Imprimo las reglas
+    print("\nREGLAS DE ASOCIACIÓN (support>{}, confidence>{}):".format(SUPP, CONF))
+    print(rules)
     # Guardo las reglas en un csv
+    print("\nGuardando reglas en fichero 'Reglas.csv'...")
     rules.to_csv('Reglas.csv', header = True, index = False)
-    # Revisar esto
 
 
 if __name__ == "__main__":

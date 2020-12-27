@@ -1,38 +1,80 @@
 antecedents,consequents,antecedent support,consequent support,support,confidence,lift,leverage,conviction
-frozenset({'noCDAccount'}),frozenset({'noPersonalLoan'}),0.9396,0.904,0.8716,0.9276287782034909,1.0261380289861624,0.022201600000000044,1.326494117647059
-frozenset({'noPersonalLoan'}),frozenset({'noCDAccount'}),0.904,0.9396,0.8716,0.9641592920353983,1.0261380289861626,0.022201600000000044,1.685234567901238
-frozenset({'noCDAccount'}),frozenset({'noCreditCard'}),0.9396,0.706,0.6936,0.7381864623243933,1.0455898899778944,0.030242400000000003,1.1229365853658537
-frozenset({'noCreditCard'}),frozenset({'noCDAccount'}),0.706,0.9396,0.6936,0.9824362606232295,1.0455898899778944,0.030242400000000003,3.4389032258064653
-frozenset({'noCreditCard'}),frozenset({'noPersonalLoan'}),0.706,0.904,0.6386,0.9045325779036827,1.0005891348492064,0.00037599999999993194,1.0055786350148361
-frozenset({'noPersonalLoan'}),frozenset({'noCreditCard'}),0.904,0.706,0.6386,0.7064159292035398,1.0005891348492066,0.00037599999999993194,1.0014167294649585
-frozenset({'noSecuritiesAccount'}),frozenset({'noCreditCard'}),0.8956,0.706,0.6302,0.7036623492630639,0.9966888799760113,-0.0020935999999999177,0.9921115297663907
-frozenset({'noCreditCard'}),frozenset({'noSecuritiesAccount'}),0.706,0.8956,0.6302,0.8926345609065156,0.9966888799760112,-0.0020935999999999177,0.9723799472295521
-"frozenset({'noCDAccount', 'noCreditCard'})",frozenset({'noPersonalLoan'}),0.6936,0.904,0.6356,0.9163783160322954,1.0136928274693533,0.008585600000000082,1.1480275862068974
-"frozenset({'noCDAccount', 'noPersonalLoan'})",frozenset({'noCreditCard'}),0.8716,0.706,0.6356,0.729233593391464,1.032908772509156,0.020250400000000113,1.0858067796610171
-"frozenset({'noCreditCard', 'noPersonalLoan'})",frozenset({'noCDAccount'}),0.6386,0.9396,0.6356,0.9953022236141561,1.0592829114667477,0.03557144000000012,12.857146666667036
-frozenset({'noCreditCard'}),"frozenset({'noCDAccount', 'noPersonalLoan'})",0.706,0.8716,0.6356,0.9002832861189803,1.032908772509156,0.020250400000000113,1.2876477272727291
-frozenset({'noPersonalLoan'}),"frozenset({'noCDAccount', 'noCreditCard'})",0.904,0.6936,0.6356,0.7030973451327434,1.013692827469353,0.008585600000000082,1.0319880774962742
-"frozenset({'noCDAccount', 'noSecuritiesAccount'})",frozenset({'noCreditCard'}),0.8646,0.706,0.6276,0.7258848022206801,1.0281654422389237,0.017192400000000108,1.0725417721518988
-"frozenset({'noCDAccount', 'noCreditCard'})",frozenset({'noSecuritiesAccount'}),0.6936,0.8956,0.6276,0.9048442906574395,1.010321896669763,0.0064118400000000575,1.0971490909090926
-"frozenset({'noCreditCard', 'noSecuritiesAccount'})",frozenset({'noCDAccount'}),0.6302,0.9396,0.6276,0.9958743256109173,1.0598917897093627,0.03546408000000012,14.640030769231116
-frozenset({'noSecuritiesAccount'}),"frozenset({'noCDAccount', 'noCreditCard'})",0.8956,0.6936,0.6276,0.7007592675301475,1.010321896669763,0.0064118400000000575,1.0239247761194035
-frozenset({'noCreditCard'}),"frozenset({'noCDAccount', 'noSecuritiesAccount'})",0.706,0.8646,0.6276,0.8889518413597735,1.0281654422389237,0.017192400000000108,1.2192908163265312
-frozenset({'NoMortgage'}),frozenset({'noCDAccount'}),0.6924,0.9396,0.655,0.9459849797804737,1.006795423350866,0.004420960000000029,1.1182074866310157
-frozenset({'NoMortgage'}),frozenset({'noPersonalLoan'}),0.6924,0.904,0.63,0.9098786828422877,1.0065029677458934,0.0040703999999999185,1.0652307692307688
-frozenset({'NoMortgage'}),frozenset({'noSecuritiesAccount'}),0.6924,0.8956,0.6198,0.8951473136915078,0.9994945440950288,-0.00031343999999999816,0.9956826446280996
-"frozenset({'noCDAccount', 'NoMortgage'})",frozenset({'noPersonalLoan'}),0.655,0.904,0.6094,0.930381679389313,1.0291832736607445,0.017279999999999962,1.3789473684210536
-"frozenset({'NoMortgage', 'noPersonalLoan'})",frozenset({'noCDAccount'}),0.63,0.9396,0.6094,0.9673015873015873,1.0294823193929197,0.017452000000000023,1.8471844660194192
-frozenset({'NoMortgage'}),"frozenset({'noCDAccount', 'noPersonalLoan'})",0.6924,0.8716,0.6094,0.8801270941652225,1.0097832654488554,0.005904160000000047,1.0711344578313258
-"frozenset({'noCDAccount', 'NoMortgage'})",frozenset({'noSecuritiesAccount'}),0.655,0.8956,0.6022,0.9193893129770991,1.026562430747096,0.015581999999999985,1.2951136363636353
-"frozenset({'noSecuritiesAccount', 'NoMortgage'})",frozenset({'noCDAccount'}),0.6198,0.9396,0.6022,0.9716037431429493,1.0340610293134838,0.019835919999999896,2.1270409090909053
-frozenset({'NoMortgage'}),"frozenset({'noCDAccount', 'noSecuritiesAccount'})",0.6924,0.8646,0.6022,0.8697284806470248,1.0059316223074541,0.003550959999999881,1.039367627494456
-frozenset({'noCDAccount'}),frozenset({'noSecuritiesAccount'}),0.9396,0.8956,0.8646,0.9201787994891444,1.0274439476207509,0.023094240000000044,1.3079232000000016
-frozenset({'noSecuritiesAccount'}),frozenset({'noCDAccount'}),0.8956,0.9396,0.8646,0.9653863331844574,1.0274439476207509,0.023094240000000044,1.7449754838709723
-frozenset({'noSecuritiesAccount'}),frozenset({'noPersonalLoan'}),0.8956,0.904,0.8116,0.9062081286288522,1.0024426201646595,0.001977600000000024,1.0235428571428578
-frozenset({'noPersonalLoan'}),frozenset({'noSecuritiesAccount'}),0.904,0.8956,0.8116,0.897787610619469,1.0024426201646595,0.001977600000000024,1.0214025974025975
-"frozenset({'noCDAccount', 'noSecuritiesAccount'})",frozenset({'noPersonalLoan'}),0.8646,0.904,0.7984,0.9234328012953966,1.021496461609952,0.016801599999999972,1.2538006042296055
-"frozenset({'noCDAccount', 'noPersonalLoan'})",frozenset({'noSecuritiesAccount'}),0.8716,0.8956,0.7984,0.9160165213400642,1.0227964731354,0.017795039999999984,1.2431016393442618
-"frozenset({'noSecuritiesAccount', 'noPersonalLoan'})",frozenset({'noCDAccount'}),0.8116,0.9396,0.7984,0.9837358304583539,1.046972999636392,0.03582064000000007,3.7136848484848533
-frozenset({'noCDAccount'}),"frozenset({'noSecuritiesAccount', 'noPersonalLoan'})",0.9396,0.8116,0.7984,0.8497232865048957,1.046972999636392,0.03582064000000007,1.253687252124646
-frozenset({'noSecuritiesAccount'}),"frozenset({'noCDAccount', 'noPersonalLoan'})",0.8956,0.8716,0.7984,0.8914694059848147,1.0227964731354,0.017795039999999984,1.1830765432098769
-frozenset({'noPersonalLoan'}),"frozenset({'noCDAccount', 'noSecuritiesAccount'})",0.904,0.8646,0.7984,0.8831858407079646,1.021496461609952,0.016801599999999972,1.1591060606060601
+frozenset({'LowIncome'}),frozenset({'noPersonalLoan'}),0.2476,0.904,0.2472,0.9983844911147012,1.1044076229144923,0.023369600000000018,59.42400000000172
+frozenset({'VeryLowIncome'}),frozenset({'noPersonalLoan'}),0.2624,0.904,0.2624,1.0,1.1061946902654867,0.0251904,inf
+frozenset({'noOnline'}),frozenset({'noCDAccount'}),0.4032,0.9396,0.3994,0.9905753968253967,1.054252231614939,0.02055327999999995,6.40875789473679
+"frozenset({'noCreditCard', 'HighCCAvg'})",frozenset({'noCDAccount'}),0.1848,0.9396,0.1836,0.9935064935064937,1.0573717470269197,0.009961920000000013,9.301600000000237
+"frozenset({'NoMortgage', 'LowIncome'})",frozenset({'noPersonalLoan'}),0.1706,0.904,0.1706,1.0,1.1061946902654867,0.016377599999999992,inf
+"frozenset({'noCreditCard', 'LowIncome'})",frozenset({'noCDAccount'}),0.1778,0.9396,0.177,0.9955005624296962,1.059494000031605,0.009939119999999968,13.423899999999742
+"frozenset({'noCDAccount', 'LowIncome'})",frozenset({'noPersonalLoan'}),0.2384,0.904,0.238,0.9983221476510067,1.1043386589059807,0.02248639999999999,57.21599999999912
+"frozenset({'noCreditCard', 'LowIncome'})",frozenset({'noPersonalLoan'}),0.1778,0.904,0.1774,0.9977502812148481,1.1037060632907612,0.016668799999999984,42.67199999999916
+"frozenset({'noSecuritiesAccount', 'LowIncome'})",frozenset({'noPersonalLoan'}),0.221,0.904,0.2206,0.9981900452488687,1.1041925279301645,0.020815999999999973,53.03999999999692
+"frozenset({'NoMortgage', 'VeryLowIncome'})",frozenset({'noPersonalLoan'}),0.1778,0.904,0.1778,1.0,1.1061946902654867,0.017068799999999995,inf
+"frozenset({'NoMortgage', 'noOnline'})",frozenset({'noCDAccount'}),0.2782,0.9396,0.276,0.9920920201294033,1.0558663475195864,0.014603279999999996,7.637854545454579
+"frozenset({'Undergraduate', 'noOnline'})",frozenset({'noCDAccount'}),0.1682,0.9396,0.1668,0.9916765755053508,1.0554241970044176,0.008759280000000008,7.256628571428615
+"frozenset({'hasOnline', 'VeryLowIncome'})",frozenset({'noPersonalLoan'}),0.1544,0.904,0.1544,1.0,1.1061946902654867,0.014822399999999986,inf
+"frozenset({'noCreditCard', 'VeryLowIncome'})",frozenset({'noCDAccount'}),0.1828,0.9396,0.1816,0.9934354485776806,1.0572961351401453,0.009841120000000009,9.200933333333474
+"frozenset({'noCDAccount', 'VeryLowIncome'})",frozenset({'noPersonalLoan'}),0.253,0.904,0.253,1.0,1.1061946902654867,0.024288000000000004,inf
+"frozenset({'noCreditCard', 'VeryLowIncome'})",frozenset({'noPersonalLoan'}),0.1828,0.904,0.1828,1.0,1.1061946902654867,0.017548800000000003,inf
+"frozenset({'noSecuritiesAccount', 'VeryLowIncome'})",frozenset({'noPersonalLoan'}),0.237,0.904,0.237,1.0,1.1061946902654867,0.022751999999999994,inf
+"frozenset({'noOnline', 'noCreditCard'})",frozenset({'noCDAccount'}),0.2856,0.9396,0.285,0.9978991596638654,1.062046785508584,0.016650239999999983,28.75039999999859
+"frozenset({'noPersonalLoan', 'noCreditCard'})",frozenset({'noCDAccount'}),0.6386,0.9396,0.6356,0.9953022236141561,1.0592829114667477,0.03557144000000012,12.857146666667036
+"frozenset({'noSecuritiesAccount', 'noCreditCard'})",frozenset({'noCDAccount'}),0.6302,0.9396,0.6276,0.9958743256109173,1.0598917897093627,0.03546408000000012,14.640030769231116
+"frozenset({'noPersonalLoan', 'noOnline'})",frozenset({'noCDAccount'}),0.3654,0.9396,0.3644,0.9972632731253421,1.0613700224833356,0.021070160000000004,22.070160000000328
+"frozenset({'noSecuritiesAccount', 'noOnline'})",frozenset({'noCDAccount'}),0.363,0.9396,0.3622,0.9977961432506888,1.061937146924956,0.02112520000000001,27.406500000000833
+"frozenset({'noPersonalLoan', 'noCreditCard', '1Component'})",frozenset({'noCDAccount'}),0.197,0.9396,0.1958,0.9939086294416243,1.057799733335062,0.010698800000000008,9.91566666666653
+"frozenset({'noSecuritiesAccount', 'noCreditCard', '1Component'})",frozenset({'noCDAccount'}),0.192,0.9396,0.1912,0.9958333333333333,1.0598481623385838,0.010796799999999995,14.496000000000054
+"frozenset({'noPersonalLoan', 'noCreditCard', '2Component'})",frozenset({'noCDAccount'}),0.163,0.9396,0.1624,0.9963190184049079,1.0603650685450277,0.009245199999999981,16.408666666666267
+"frozenset({'noSecuritiesAccount', 'noCreditCard', '2Component'})",frozenset({'noCDAccount'}),0.1596,0.9396,0.1594,0.9987468671679197,1.0629489859173262,0.009439840000000005,48.19919999999681
+"frozenset({'noPersonalLoan', '4Component', 'noCreditCard'})",frozenset({'noCDAccount'}),0.1534,0.9396,0.1526,0.9947848761408083,1.058732307514696,0.008465360000000005,11.581700000000014
+"frozenset({'Advanced/Professional', 'noPersonalLoan', 'noCreditCard'})",frozenset({'noCDAccount'}),0.1836,0.9396,0.1834,0.9989106753812635,1.0631233241605615,0.01088944,55.447199999996435
+"frozenset({'Advanced/Professional', 'noSecuritiesAccount', 'noCreditCard'})",frozenset({'noCDAccount'}),0.1924,0.9396,0.1914,0.9948024948024948,1.0587510587510587,0.010620960000000013,11.620960000000062
+"frozenset({'noPersonalLoan', 'noCreditCard', 'Fifties'})",frozenset({'noCDAccount'}),0.17,0.9396,0.1692,0.9952941176470587,1.059274284426414,0.009467999999999976,12.834999999999564
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'Fifties'})",frozenset({'noCDAccount'}),0.1674,0.9396,0.1666,0.995221027479092,1.0591964958270457,0.009310960000000007,12.638700000000078
+"frozenset({'noPersonalLoan', 'Forties', 'noCreditCard'})",frozenset({'noCDAccount'}),0.1624,0.9396,0.1614,0.9938423645320197,1.0577292087399102,0.008808960000000005,9.808959999999969
+"frozenset({'noSecuritiesAccount', 'Forties', 'noCreditCard'})",frozenset({'noCDAccount'}),0.1582,0.9396,0.1576,0.9962073324905182,1.060246203161471,0.008955279999999982,15.925466666666045
+"frozenset({'noPersonalLoan', 'noCreditCard', 'Graduated'})",frozenset({'noCDAccount'}),0.1746,0.9396,0.1738,0.995418098510882,1.0594062351116242,0.009745840000000006,13.18230000000005
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'Graduated'})",frozenset({'noCDAccount'}),0.177,0.9396,0.176,0.9943502824858756,1.0582697770177476,0.0096908,10.69079999999989
+"frozenset({'noPersonalLoan', 'noCreditCard', 'HighCCAvg'})",frozenset({'noCDAccount'}),0.1794,0.9396,0.1788,0.9966555183946487,1.0607231996537343,0.010235759999999983,18.059599999999417
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'HighCCAvg'})",frozenset({'noCDAccount'}),0.1648,0.9396,0.1646,0.9987864077669902,1.062991068291816,0.00975392,49.76959999999775
+"frozenset({'noPersonalLoan', 'noCreditCard', 'HighIncome'})",frozenset({'noCDAccount'}),0.168,0.9396,0.1674,0.9964285714285713,1.0604816639299397,0.009547199999999978,16.911999999999537
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'HighIncome'})",frozenset({'noCDAccount'}),0.1528,0.9396,0.1526,0.99869109947644,1.0628896333295446,0.00902912000000003,46.14560000000632
+"frozenset({'NoMortgage', 'noCDAccount', 'LowIncome'})",frozenset({'noPersonalLoan'}),0.1644,0.904,0.1644,1.0,1.1061946902654867,0.015782400000000002,inf
+"frozenset({'noSecuritiesAccount', 'NoMortgage', 'LowIncome'})",frozenset({'noPersonalLoan'}),0.1516,0.904,0.1516,1.0,1.1061946902654867,0.0145536,inf
+"frozenset({'noPersonalLoan', 'noCreditCard', 'LowIncome'})",frozenset({'noCDAccount'}),0.1774,0.9396,0.1766,0.995490417136415,1.0594832025717487,0.00991496,13.393700000000209
+"frozenset({'noCDAccount', 'noCreditCard', 'LowIncome'})",frozenset({'noPersonalLoan'}),0.177,0.904,0.1766,0.9977401129943504,1.1036948152592372,0.016592000000000023,42.48000000000205
+"frozenset({'noCreditCard', 'LowIncome'})","frozenset({'noPersonalLoan', 'noCDAccount'})",0.1778,0.8716,0.1766,0.9932508436445444,1.1395718720107209,0.021629519999999985,19.02459999999994
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'LowIncome'})",frozenset({'noCDAccount'}),0.159,0.9396,0.159,1.0,1.0642826734780757,0.00960359999999999,inf
+"frozenset({'noSecuritiesAccount', 'noCDAccount', 'LowIncome'})",frozenset({'noPersonalLoan'}),0.218,0.904,0.2176,0.9981651376146788,1.1041649752374765,0.02052799999999999,52.3199999999984
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'LowIncome'})",frozenset({'noPersonalLoan'}),0.159,0.904,0.1586,0.9974842767295596,1.1034118105415482,0.014863999999999988,38.15999999999831
+"frozenset({'NoMortgage', 'noCDAccount', 'VeryLowIncome'})",frozenset({'noPersonalLoan'}),0.172,0.904,0.172,1.0,1.1061946902654867,0.016512,inf
+"frozenset({'noSecuritiesAccount', 'NoMortgage', 'VeryLowIncome'})",frozenset({'noCDAccount'}),0.1596,0.9396,0.1582,0.9912280701754387,1.0549468605528296,0.008239840000000026,6.885600000000067
+"frozenset({'noSecuritiesAccount', 'NoMortgage', 'VeryLowIncome'})",frozenset({'noPersonalLoan'}),0.1596,0.904,0.1596,1.0,1.1061946902654867,0.01532159999999999,inf
+"frozenset({'NoMortgage', 'noCreditCard', 'noOnline'})",frozenset({'noCDAccount'}),0.1966,0.9396,0.1964,0.9989827060020345,1.0631999851022078,0.011674639999999986,59.37319999999705
+"frozenset({'noPersonalLoan', 'NoMortgage', 'noCreditCard'})",frozenset({'noCDAccount'}),0.4434,0.9396,0.4408,0.9941362201172756,1.058041954147803,0.02418136000000004,10.300523076923168
+"frozenset({'noSecuritiesAccount', 'NoMortgage', 'noCreditCard'})",frozenset({'noCDAccount'}),0.4366,0.9396,0.4352,0.9967934035730646,1.0608699484600517,0.02497063999999999,18.83617142857127
+"frozenset({'noPersonalLoan', 'NoMortgage', 'noOnline'})",frozenset({'noCDAccount'}),0.2522,0.9396,0.2518,0.998413957176844,1.0625946755819966,0.014832880000000048,38.08220000000547
+"frozenset({'noSecuritiesAccount', 'NoMortgage', 'noOnline'})",frozenset({'noCDAccount'}),0.2484,0.9396,0.2478,0.9975845410628018,1.061711942382718,0.014403359999999976,25.005599999998743
+"frozenset({'noPersonalLoan', 'Thirties', 'noCreditCard'})",frozenset({'noCDAccount'}),0.1592,0.9396,0.1586,0.9962311557788943,1.060271557874515,0.009015679999999998,16.026133333332677
+"frozenset({'noSecuritiesAccount', 'Thirties', 'noCreditCard'})",frozenset({'noCDAccount'}),0.1572,0.9396,0.1566,0.9961832061068702,1.0602205258693809,0.008894879999999994,15.824799999999746
+"frozenset({'noPersonalLoan', 'noCreditCard', 'Undergraduate'})",frozenset({'noCDAccount'}),0.2804,0.9396,0.2784,0.992867332382311,1.0566914989168912,0.014936159999999976,8.468079999999963
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'Undergraduate'})",frozenset({'noCDAccount'}),0.2608,0.9396,0.2602,0.9976993865030676,1.0618341703949208,0.015152320000000025,26.253866666667456
+"frozenset({'noPersonalLoan', 'noOnline', 'Undergraduate'})",frozenset({'noCDAccount'}),0.1598,0.9396,0.1594,0.997496871088861,1.0616186367484686,0.009251919999999997,24.129799999999086
+"frozenset({'Undergraduate', 'noOnline', 'noSecuritiesAccount'})",frozenset({'noCDAccount'}),0.1516,0.9396,0.1516,1.0,1.0642826734780757,0.009156639999999994,inf
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'VeryHighCCAvg'})",frozenset({'noCDAccount'}),0.1702,0.9396,0.1686,0.9905992949471211,1.054277665971819,0.008680080000000007,6.425050000000024
+"frozenset({'noPersonalLoan', 'noCreditCard', 'VeryLowIncome'})",frozenset({'noCDAccount'}),0.1828,0.9396,0.1816,0.9934354485776806,1.0572961351401453,0.009841120000000009,9.200933333333474
+"frozenset({'noCDAccount', 'noCreditCard', 'VeryLowIncome'})",frozenset({'noPersonalLoan'}),0.1816,0.904,0.1816,1.0,1.1061946902654867,0.017433599999999994,inf
+"frozenset({'noCreditCard', 'VeryLowIncome'})","frozenset({'noPersonalLoan', 'noCDAccount'})",0.1828,0.8716,0.1816,0.9934354485776806,1.139783672071685,0.022271520000000017,19.559600000000287
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'VeryLowIncome'})",frozenset({'noCDAccount'}),0.1644,0.9396,0.1644,1.0,1.0642826734780757,0.00992976000000001,inf
+"frozenset({'noSecuritiesAccount', 'noCDAccount', 'VeryLowIncome'})",frozenset({'noPersonalLoan'}),0.233,0.904,0.233,1.0,1.1061946902654867,0.022368,inf
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'VeryLowIncome'})",frozenset({'noPersonalLoan'}),0.1644,0.904,0.1644,1.0,1.1061946902654867,0.015782400000000002,inf
+"frozenset({'noPersonalLoan', 'noCreditCard', 'VeyLowCCAvg'})",frozenset({'noCDAccount'}),0.1896,0.9396,0.1882,0.9926160337552743,1.0564240461422671,0.010051840000000006,8.179885714285755
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'VeyLowCCAvg'})",frozenset({'noCDAccount'}),0.1762,0.9396,0.1756,0.996594778660613,1.0606585554072083,0.01004248000000002,17.737466666666815
+"frozenset({'noPersonalLoan', 'noCreditCard', 'hasOnline'})",frozenset({'noCDAccount'}),0.3786,0.9396,0.3756,0.9920760697305864,1.0558493717864903,0.019867440000000014,7.622480000000004
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'hasOnline'})",frozenset({'noCDAccount'}),0.3734,0.9396,0.3708,0.9930369576861275,1.0568720281887267,0.01995336000000003,8.674369230769312
+"frozenset({'noPersonalLoan', 'noOnline', 'noCreditCard'})",frozenset({'noCDAccount'}),0.26,0.9396,0.26,1.0,1.0642826734780757,0.015703999999999996,inf
+"frozenset({'noSecuritiesAccount', 'noOnline', 'noCreditCard'})",frozenset({'noCDAccount'}),0.2568,0.9396,0.2568,1.0,1.0642826734780757,0.015510720000000006,inf
+"frozenset({'noPersonalLoan', 'noCreditCard', 'noSecuritiesAccount'})",frozenset({'noCDAccount'}),0.5714,0.9396,0.5714,1.0,1.0642826734780757,0.034512560000000025,inf
+"frozenset({'noPersonalLoan', 'noOnline', 'noSecuritiesAccount'})",frozenset({'noCDAccount'}),0.329,0.9396,0.329,1.0,1.0642826734780757,0.01987159999999999,inf
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'LowIncome'})","frozenset({'noPersonalLoan', 'noCDAccount'})",0.159,0.8716,0.1586,0.9974842767295596,1.1444289544854975,0.020015599999999995,51.03899999999774
+"frozenset({'noSecuritiesAccount', 'NoMortgage', 'VeryLowIncome'})","frozenset({'noPersonalLoan', 'noCDAccount'})",0.1596,0.8716,0.1582,0.9912280701754387,1.1372511130971072,0.019092639999999994,14.637600000000136
+"frozenset({'noSecuritiesAccount', 'noCreditCard', 'VeryLowIncome'})","frozenset({'noPersonalLoan', 'noCDAccount'})",0.1644,0.8716,0.1644,1.0,1.1473152822395594,0.021108959999999982,inf
