@@ -180,6 +180,7 @@ def imput_mean(df):
                    'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
     unknown_val = [9, 99, 99, 9, 99, 9, 9, 9, 99, 99, 9, 9, 9998, 9999, 9]
     for i in range(len(atr_imputed)):
+        df[atr_imputed[i]] = df[atr_imputed[i]].replace(to_replace = unknown_val[i], value = None)
         mean = int(df[atr_imputed[i]].mean())
         if(IMPRIME_INFO):
             print("  Cambiando en {} el valor {} por su media: {}".format(atr_imputed[i], unknown_val[i], mean))
@@ -194,6 +195,7 @@ def imput_mode(df):
                    'TRAF_CON', 'SPD_LIM', 'LGHT_CON', 'WEATHER', 'PED_ACC', 'PED_ACC', 'ALCOHOL']
     unknown_val = [9, 99, 99, 9, 99, 9, 9, 9, 99, 99, 9, 9, 9998, 9999, 9]
     for i in range(len(atr_imputed)):
+        df[atr_imputed[i]] = df[atr_imputed[i]].replace(to_replace = unknown_val[i], value = None)
         mode = int(df[atr_imputed[i]].mode())
         if(IMPRIME_INFO):
             print("  Cambiando en {} el valor {} por su moda: {}".format(atr_imputed[i], unknown_val[i], mode))
