@@ -137,13 +137,23 @@ def main():
     kmeans, labels = get_k_medias(X_o)
     # Comparamos la distribución de las clases respecto a la primera columna.
     plot_cluster_primera_variable(X_o, kmeans, labels)
+    # Cambiamos etiquetas para ajustar el cluster. 0->3
+    for i in range(len(labels)):
+        if labels[i]==0: labels[i]=3
+        elif labels[i]==1: labels[i]=1
+        elif labels[i]==2: labels[i]=2
     print("\nEtiquetas predichas por KMEANS:")
     print(labels)
     print("\nEtiquetas reales:")
     print(np.array(y_o))
     print("\nNOTA: El algoritmo KMEANS tiene un gran éxito en la clasificación")
     silhouette = silhouette_score(X_o, (kmeans.labels_), metric='euclidean')
-    print("\nLa puntuación de silhouette es: {}".format(silhouette))
+    aciertos = 0
+    for i in range(len(labels)):
+        if labels[i]==y_o[i]:
+            aciertos = aciertos+1
+    print("\nEl accuracy es: {}".format(round(aciertos/len(labels),3)))
+    print("\nLa puntuación de silhouette es: {}".format(round(silhouette,3)))
 
     # PREPROCESANDO (StandardScaler + PCA)
     print("\n----- PREPROCESANDO (StandardScaler + PCA) -----")
@@ -158,13 +168,22 @@ def main():
     # Comparamos la distribución de las clases respecto a la primera columna.
     plot_cluster_primera_variable(X_pca, kmeans_pca, labels_pca)
     # Cambiamos etiquetas para ajustar el cluster. 0->3
+    for i in range(len(labels_pca)):
+        if labels_pca[i]==0: labels_pca[i]=3
+        elif labels_pca[i]==1: labels_pca[i]=1
+        elif labels_pca[i]==2: labels_pca[i]=2
     print("\nEtiquetas predichas por KMEANS:")
     print(labels_pca)
     print("\nEtiquetas reales:")
     print(np.array(y_o))
     print("\nNOTA: El algoritmo KMEANS sobre los datos preprocesados tiene un gran éxito en la clasificación")
-    silhouette_pca = silhouette_score(X_pca, (kmeans.labels_), metric='euclidean')
-    print("\nLa puntuación de silhouette es: {}".format(silhouette_pca))
+    silhouette_pca = silhouette_score(X_pca, labels_pca, metric='euclidean')
+    aciertos = 0
+    for i in range(len(labels_pca)):
+        if labels_pca[i]==y_o[i]:
+            aciertos = aciertos+1
+    print("\nEl accuracy es: {}".format(round(aciertos/len(labels_pca),3)))
+    print("\nLa puntuación de silhouette es: {}".format(round(silhouette_pca)))
 
     # DBSCAN
     print("\n----- DBSCAN -----")
