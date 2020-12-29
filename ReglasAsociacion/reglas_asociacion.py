@@ -221,6 +221,9 @@ def preprocesamiento(df):
 #####    Reglas de asociación    #####
 ######################################
 
+""" Reglas de asociación. Devuelve las reglas.
+- df: dataframe.
+"""
 def get_rules(df):
     print("\n---  REGLAS DE ASOCIACIÓN  ---")
     records = []
