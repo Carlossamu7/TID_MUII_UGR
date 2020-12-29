@@ -30,6 +30,12 @@ from sklearn.metrics import roc_curve, roc_auc_score
 from sklearn.model_selection import cross_val_score
 import statistics as stats
 
+# Para imprimir el árbol
+from sklearn.tree import export_graphviz
+from six import StringIO
+from IPython.display import Image
+import pydotplus
+
 IMPRIME_INFO = True     # Indica si imprimir información
 
 #############################
@@ -169,6 +175,24 @@ def knn(X_train, X_test, y_train, y_test):
     print("Prediciendo etiquetas")
     return knn.predict(X_test), knn.predict_proba(X_test)
 
+""" Dividiendo en entrada y salida el df.
+- clf: clasificador del modelo.
+- feature_cols: nombres de las columnas.
+- title (op): título del grafo. Por defecto 'arbol.png'.
+"""
+def draw_png(clf, feature_cols, title="arbol.png"):
+    dot_data = StringIO()
+    export_graphviz(clf,
+                    out_file=dot_data,
+                    filled=True,
+                    rounded=True,
+                    special_characters=True,
+                    feature_names=feature_cols,
+                    class_names=['NoCompetitive', 'Competitive'])
+    graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+    graph.write_png(title)
+    Image(graph.create_png())
+
 """ Entrenando con árbol de decisión.
 - X_train: datos de entrenamiento.
 - X_test: datos de test.
@@ -187,6 +211,8 @@ def decision_tree(X_train, X_test, y_train, y_test):
     print(score)
     print("Accuracy medio de la cross-validation: {:.4f}".format(stats.mean(score)))
     print("Prediciendo etiquetas")
+    fcols = ["Category", "currency", "sellerRating", "Duration", "endDay", "ClosePrice", "OpenPrice"]
+    draw_png(tree, fcols)
     return tree.predict(X_test), tree.predict_proba(X_test)
 
 """ Entrenando con SVC.
