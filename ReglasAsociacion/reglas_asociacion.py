@@ -254,7 +254,7 @@ def get_rules(df):
         if(len(rules["antecedents"][i])>3 or len(rules["consequents"][i])>3):
             to_delete.append(i)
 
-    print("Índices de las reglas que tienen más de 3 antecedentes o consecuentes: ")
+    print("\nÍndices de las reglas que tienen más de 3 antecedentes o consecuentes: ")
     print(to_delete)
     rules = rules.drop(to_delete, axis=0)
     rules = rules.reset_index()
@@ -270,7 +270,10 @@ def get_rules(df):
 def main():
     print("Leyendo el conjunto de datos")
     df = read_data()
-    print(df["Income"].describe())
+
+    df.hist()
+    plt.gcf().canvas.set_window_title("Práctica 4 - reglas de asociación")
+    plt.show()
 
     # Preprocesamiento
     df = preprocesamiento(df)
