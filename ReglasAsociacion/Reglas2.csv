@@ -1,19 +1,19 @@
-antecedents,consequents,antecedent support,consequent support,support,confidence,lift,leverage,conviction
-frozenset({'1Component'}),frozenset({'NoMortgage'}),0.2944,0.6924,0.2078,0.7058423913043479,1.019414198879763,0.0039574400000000065,1.0456979214780602
-frozenset({'3Component'}),frozenset({'NoMortgage'}),0.202,0.6924,0.1416,0.700990099009901,1.012406266623196,0.0017351999999999923,1.028728476821192
-frozenset({'Forties'}),frozenset({'NoMortgage'}),0.2514,0.6924,0.1768,0.7032617342879873,1.01568708013863,0.0027306400000000064,1.0366037533512065
-frozenset({'HighCCAvg'}),frozenset({'NoMortgage'}),0.2616,0.6924,0.185,0.7071865443425076,1.0213554944288092,0.0038681599999999816,1.0504981723237596
-frozenset({'HighIncome'}),frozenset({'NoMortgage'}),0.2456,0.6924,0.1734,0.7060260586319218,1.019679460762452,0.0033465599999999984,1.046351246537396
-frozenset({'Sixties'}),frozenset({'NoMortgage'}),0.1348,0.6924,0.0944,0.7002967359050445,1.011404875657199,0.0010644799999999927,1.026348514851485
-frozenset({'VeryHighCCAvg'}),frozenset({'NoMortgage'}),0.271,0.6924,0.1906,0.703321033210332,1.0157727227185616,0.002959599999999979,1.0368109452736314
-frozenset({'hasPersonalLoan'}),frozenset({'VeryHighCCAvg'}),0.096,0.271,0.0728,0.7583333333333333,2.7982779827798274,0.046784000000000006,3.0165517241379307
-frozenset({'hasPersonalLoan'}),frozenset({'VeryHighIncome'}),0.096,0.2444,0.0878,0.9145833333333333,3.742157665030005,0.0643376,8.846048780487802
-"frozenset({'1Component', 'Undergraduate'})",frozenset({'NoMortgage'}),0.1356,0.6924,0.0978,0.7212389380530974,1.0416506904290834,0.0039105599999999935,1.1034539682539681
-"frozenset({'hasOnline', '1Component'})",frozenset({'NoMortgage'}),0.1766,0.6924,0.1254,0.710079275198188,1.0255333263983073,0.003122159999999999,1.0609796875000002
-"frozenset({'hasOnline', 'Forties'})",frozenset({'NoMortgage'}),0.1464,0.6924,0.105,0.7172131147540983,1.0358363875709102,0.0036326399999999925,1.0877449275362316
-"frozenset({'hasOnline', 'HighCCAvg'})",frozenset({'NoMortgage'}),0.1512,0.6924,0.1066,0.705026455026455,1.0182357813784735,0.0019091200000000003,1.042805381165919
-"frozenset({'HighIncome', 'hasOnline'})",frozenset({'NoMortgage'}),0.1482,0.6924,0.1064,0.717948717948718,1.036898783865855,0.003786319999999996,1.090581818181818
-"frozenset({'VeryHighCCAvg', 'Undergraduate'})",frozenset({'NoMortgage'}),0.1542,0.6924,0.1096,0.7107652399481194,1.0265240322763134,0.0028319200000000017,1.0634959641255606
-"frozenset({'VeryHighIncome', 'Undergraduate'})",frozenset({'NoMortgage'}),0.1512,0.6924,0.1068,0.7063492063492064,1.020146167459859,0.002109120000000006,1.0475027027027028
-"frozenset({'Undergraduate', 'hasCreditCard'})",frozenset({'NoMortgage'}),0.1266,0.6924,0.0898,0.7093206951026857,1.0244377456711231,0.002142160000000004,1.0582108695652177
-"frozenset({'VeryHighCCAvg', 'hasOnline'})",frozenset({'NoMortgage'}),0.1624,0.6924,0.1144,0.7044334975369458,1.0173794014109558,0.00195424000000001,1.0407133333333334
+antecedents,consequents,antecedent support,confidence
+{'1Component'},{'NoMortgage'},"0,294","0,706"
+{'3Component'},{'NoMortgage'},"0,202","0,701"
+{'Forties'},{'NoMortgage'},"0,251","0,703"
+{'HighCCAvg'},{'NoMortgage'},"0,262","0,707"
+{'HighIncome'},{'NoMortgage'},"0,246","0,706"
+{'Sixties'},{'NoMortgage'},"0,135","0,700"
+{'VeryHighCCAvg'},{'NoMortgage'},"0,271","0,703"
+{'hasPersonalLoan'},{'VeryHighCCAvg'},"0,960","0,758"
+{'hasPersonalLoan'},{'VeryHighIncome'},"0,960","0,915"
+"{'1Component', 'Undergraduate'}",{'NoMortgage'},"0,136","0,721"
+"{'hasOnline', '1Component'}",{'NoMortgage'},"0,177","0,710"
+"{'hasOnline', 'Forties'}",{'NoMortgage'},"0,146","0,717"
+"{'hasOnline', 'HighCCAvg'}",{'NoMortgage'},"0,151","0,705"
+"{'HighIncome', 'hasOnline'}",{'NoMortgage'},"0,148","0,718"
+"{'VeryHighCCAvg', 'Undergraduate'}",{'NoMortgage'},"0,154","0,711"
+"{'VeryHighIncome', 'Undergraduate'}",{'NoMortgage'},"0,151","0,706"
+"{'Undergraduate', 'hasCreditCard'}",{'NoMortgage'},"0,127","0,709"
+"{'VeryHighCCAvg', 'hasOnline'}",{'NoMortgage'},"0,162","0,704"
