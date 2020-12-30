@@ -143,7 +143,7 @@ def discretize_mortgage(df):
             df["Mortgage"][i] = "VeryHighMortgage"
     return df
 
-""" Discretizando el atributo 'Mortgage'. Devuelve el df.
+""" Discretizando el atributo 'CCAvg'. Devuelve el df.
 - df: dataframe.
 """
 def discretize_CCAvg(df):
