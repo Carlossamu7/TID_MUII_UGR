@@ -251,7 +251,7 @@ def get_rules(df):
 
     to_delete = []
     for i in range(rules.shape[0]):
-        if(len(rules["antecedents"][i])>3 or len(rules["consequents"][i])>3):
+        if(len(rules["antecedents"][i])>2 or len(rules["consequents"][i])>2):
             to_delete.append(i)
 
     print("\nÍndices de las reglas que tienen más de 3 antecedentes o consecuentes: ")
