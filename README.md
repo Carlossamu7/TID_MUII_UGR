@@ -21,12 +21,12 @@ Las prácticas de esta asignatura son las siguientes:
 - [Clasificación](https://github.com/Carlossamu7/TID_MUII_UGR/milestone/3). Base de datos: `eBayAuctions.xls`.
     - Consultar [código](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Clasificaci%C3%B3n/clasificacion.py).
     - Consultar [datos](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Clasificaci%C3%B3n/eBayAuctions.xls).
-    - Consultar memoria de la práctica.
+    - Consultar [memoria](https://github.com/Carlossamu7/TID_MUII_UGR/blob/main/Clasificaci%C3%B3n/TID_MUII_Clasificaci%C3%B3n.pdf) de la práctica.
 
 - [Reglas de Asociación](https://github.com/Carlossamu7/TID_MUII_UGR/milestone/4). Base de datos: `prestamo.xls`.
     - Consultar [código](https://github.com/Carlossamu7/TID_MUII_UGR/tree/main/ReglasAsociacion/reglas_asociacion.py).
     - Consultar [datos](https://github.com/Carlossamu7/TID_MUII_UGR/tree/main/ReglasAsociacion/prestamo.xls).
-    - Consultar memoria de la práctica.
+    - Consultar [memoria](https://github.com/Carlossamu7/TID_MUII_UGR/tree/main/ReglasAsociacion) de la práctica.
 
 ## Licencia
 
